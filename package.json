@@ -12,15 +12,15 @@
     "random": "^3.0.6",
     "ws": "^8.4.0"
   },
-  "name": "user4",
+  "name": "basic",
   "version": "1.0.0",
-  "main": "block.js",
+  "description": "",
+  "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "jeonjinyoung",
+  "author": "",
   "license": "ISC",
-  "description": "",
   "devDependencies": {
     "eslint": "^8.6.0",
     "nodemon": "^2.0.15"
