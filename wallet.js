@@ -14,58 +14,60 @@ const ecdsa = require("elliptic"); // 타원 곡선 디지털 서명 알고리�
 //라이브러리를가지고 암호화 알고리즘을 하나를 명시를 해줍시다.
 const ec = new ecdsa.ec("secp256k1");
 
-console.log(ec.genKeyPair().getPrivate().toString());
+//키만들기
+//console.log(ec.genKeyPair().getPrivate().toString());
+
 //저장할위치가 필요하다
 //환경변수를지정해서
 const privateKeyLocation = "wallet/" + (process.env.PRIVATE_KEY || "default");
 const privateKeyFile = privateKeyLocation + "/private_key";
 
 function initWallet() {
-    //예외처리
-    if (fs.existsSync(privateKeyFile)) {
-        console.log("기존 지갑 private key 경로" + privateKeyFile);
-        return;
-    }
-    if (!fs.existsSync("wallet/")) {
-        fs.mkdirSync("wallet/");
-    }
-    if (!fs.existsSync(privateKeyFile)) {
-        fs.mkdirSync(privateKeyLocation);
-    }
+  //예외처리
+  if (fs.existsSync(privateKeyFile)) {
+    console.log("기존 지갑 private key 경로" + privateKeyFile);
+    return;
+  }
+  if (!fs.existsSync("wallet/")) {
+    fs.mkdirSync("wallet/");
+  }
+  if (!fs.existsSync(privateKeyFile)) {
+    fs.mkdirSync(privateKeyLocation);
+  }
 
-    //새로운 공개키는 공개키를 만들수있고
-    const newPrivateKey = generatePrivatekey();
-    fs.writeFileSync(privateKeyFile, newPrivateKey);
-    console.log("새로운 지갑 생성 private key 경로 : " + privateKeyFile);
+  //새로운 공개키는 공개키를 만들수있고
+  const newPrivateKey = generatePrivatekey();
+  fs.writeFileSync(privateKeyFile, newPrivateKey);
+  console.log("새로운 지갑 생성 private key 경로 : " + privateKeyFile);
 }
 initWallet();
 
 //비밀키를 만드는가장 쉬운방법
 function generatePrivatekey() {
-    const keyPair = ec.genKeyPair();
-    //비밀키는 키페어에서 가져온다.
-    const privateKey = keyPair.getPrivate();
-    //16진수로 바꿔서 표현해줬다.
-    return privateKey.toString(16);
+  const keyPair = ec.genKeyPair();
+  //비밀키는 키페어에서 가져온다.
+  const privateKey = keyPair.getPrivate();
+  //16진수로 바꿔서 표현해줬다.
+  return privateKey.toString(16);
 }
 
 //외부에서 비밀키를 가져다 쓰고싶을때?
 function getPrivateKeyFromWallet() {
-    //fs파일에서 파일을 읽어준다. privateKeyfile을 utf8로 인코딩한거를 buffer에 담아서
-    const buffer = fs.readFileSync(privateKeyFile, "utf8");
-    //buffer에 담은걸 toString으로 바꿔서 표현
-    return buffer.toString();
+  //fs파일에서 파일을 읽어준다. privateKeyfile을 utf8로 인코딩한거를 buffer에 담아서
+  const buffer = fs.readFileSync(privateKeyFile, "utf8");
+  //buffer에 담은걸 toString으로 바꿔서 표현
+  return buffer.toString();
 }
 
 //외부에서 공개키를 가져오려면?
 function getPublicKeyFromWallet() {
-    //공개키를 가져오려면 일단 비밀키를 getPrivatekeyFromWallet에서 가져온다음에
-    const privateKey = getPrivateKeyFromWallet();
-    //ec.keyFromPrivate안에 인자로 비밀키를 넣어주면 우리가 원하는 퍼블릭 키가된다.
-    //키 생성하더라도 16진수로 생성해주고
-    const key = ec.keyFromPrivate(privateKey, "hex");
-    //key.getPublic을 통해서 호출한다음 hex로 인코딩을 해줘야한다.
-    key.getPublic().encode("hex");
+  //공개키를 가져오려면 일단 비밀키를 getPrivatekeyFromWallet에서 가져온다음에
+  const privateKey = getPrivateKeyFromWallet();
+  //ec.keyFromPrivate안에 인자로 비밀키를 넣어주면 우리가 원하는 퍼블릭 키가된다.
+  //키 생성하더라도 16진수로 생성해주고
+  const key = ec.keyFromPrivate(privateKey, "hex");
+  //key.getPublic을 통해서 호출한다음 hex로 인코딩을 해줘야한다.
+  key.getPublic().encode("hex");
 }
 
 module.exports = { getPublicKeyFromWallet, initWallet };
