@@ -1,10 +1,8 @@
-// 블록의 생성, 검증, 합의 알고리즘
-// 프로토콜 변경 시 수정
 const fs = require("fs");
 const merkle = require("merkle");
 
-const { Block, BlockHeader } = require("../blockchain");
-const { createHash } = require("./u_hash");
+const { Block, BlockHeader } = require("./blockchain");
+const { createHash } = require("../utils/hash");
 function getVersion() {
   const package = fs.readFileSync("package.json");
   //console.log(JSON.parse(package).version)

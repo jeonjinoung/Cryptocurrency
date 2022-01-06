@@ -1,8 +1,7 @@
-// HTTP Server / P2P Server / 지갑 초기화
-// (사용자와 노드 간의 통신)
+/* HTTP Server (사용자와 노드 간의 통신) */
 const express = require("express");
-const { getBlocks, getVersion, nextBlock } = require("./utils/u_blocks");
-const { addBlock } = require("./utils/u_isValidBlock");
+const { getBlocks, getVersion, nextBlock } = require("../blockchain/blocks");
+const { addBlock } = require("../utils/isValidBlock");
 const http_port = process.env.HTTP_PORT || 3001;
 
 function initHttpServer() {
