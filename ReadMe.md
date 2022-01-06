@@ -1,3 +1,1 @@
-새로시작하는 깃
-
-왜또안되지?
+# Cryptocurrency project
