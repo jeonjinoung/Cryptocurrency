@@ -1,4 +1,4 @@
-const { Blocks, getLastBlock, nextBlock } = require("./blockchain/blocks");
+const { Blocks, getLastBlock, nextBlock } = require("../blockchain/blocks");
 const { createHash } = require("./hash");
 function isValidBlockStructure(block) {
   //블럭에 형태가 맞는지 확인하는 함수
