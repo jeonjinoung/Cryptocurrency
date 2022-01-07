@@ -6,25 +6,13 @@ class Block {
 }
 
 class BlockHeader {
-  constructor(
-    version,
-    index,
-    previousHash,
-    timestamp,
-    merkleRoot,
-    difficulty,
-    nonce
-  ) {
+  constructor(version, index, previousHash, timestamp, merkleRoot) {
     this.version = version;
     this.index = index;
     this.previousHash = previousHash;
     this.timestamp = timestamp;
     this.merkleRoot = merkleRoot;
-    this.difficulty = difficulty;
-    this.nonce = nonce;
   }
 }
 
 module.exports = { Block, BlockHeader };
-
-const blockchain = [];
