@@ -1,0 +1,28 @@
+{
+  "dependencies": {
+    "body-parser": "^1.19.1",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.1.1",
+    "elliptic": "^6.5.4",
+    "eslint-config-airbnb": "^19.0.4",
+    "express": "^4.17.2",
+    "fs": "^0.0.1-security",
+    "merkle": "^0.6.0",
+    "nodejs-websocket": "^1.7.2",
+    "random": "^3.0.6",
+    "ws": "^8.4.0"
+  },
+  "name": "basic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "nodemon server/main.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.6.0",
+    "nodemon": "^2.0.15"
+  }
+}
