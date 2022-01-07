@@ -1,6 +1,5 @@
 /* HTTP Server (사용자와 노드 간의 통신) */
 const express = require("express");
-const bodyParser = require("body-parser");
 const { getBlocks, getVersion, nextBlock } = require("../blockchain/blocks");
 const { addBlock } = require("../utils/isValidBlock");
 const http_port = process.env.HTTP_PORT || 3001;
@@ -8,7 +7,7 @@ const { connectToPeers, getSockets, initConnection } = require("./networks");
 
 function initHttpServer() {
   const app = express();
-  app.use(bodyParser.json());
+  app.use(express.json());
 
   app.post("/addPeers", (req, res) => {
     const data = req.body.data || [];
