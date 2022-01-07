@@ -1,4 +1,10 @@
-const { Blocks, getLastBlock, nextBlock } = require("../blockchain/blocks");
+const merkle = require("merkle");
+const {
+  Blocks,
+  getLastBlock,
+  nextBlock,
+  getVersion,
+} = require("../blockchain/blocks");
 const { createHash } = require("./hash");
 function isValidBlockStructure(block) {
   //블럭에 형태가 맞는지 확인하는 함수
@@ -8,8 +14,6 @@ function isValidBlockStructure(block) {
     typeof block.header.previousHash === "string" && //그전 해시값인지
     typeof block.header.timestamp === "number" && //만든시간
     typeof block.header.merkleRoot === "string" && //머클루트
-    typeof block.header.difficulty === "number" && //난이도
-    typeof block.header.nonce === "number" && //넌스
     typeof block.body === "object"
   ); //body데이터
 }
@@ -36,7 +40,6 @@ function isValidNewBlock(newBlock, previousBlock) {
   ) {
     console.log("invalid merkleRoot");
     return false;
-    // 22.01.04 //시간관련된것
   }
   return true;
 }
@@ -48,8 +51,15 @@ function addBlock(newBlock) {
   }
   return false;
 }
+
 const block = nextBlock(["상민이가 시켰는데요?"]);
 addBlock(block);
-console.log(Blocks);
 
-module.exports = { Blocks, getLastBlock, createHash, addBlock };
+module.exports = {
+  Blocks,
+  getLastBlock,
+  createHash,
+  addBlock,
+  nextBlock,
+  getVersion,
+};

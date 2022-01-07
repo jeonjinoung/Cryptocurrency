@@ -3,6 +3,7 @@ const merkle = require("merkle");
 
 const { Block, BlockHeader } = require("./blockchain");
 const { createHash } = require("../utils/hash");
+
 function getVersion() {
   const package = fs.readFileSync("package.json");
   //console.log(JSON.parse(package).version)
@@ -13,8 +14,6 @@ function getVersion() {
 //함수를 가져와서 값이 안나옴
 //console.log(getVersion);
 
-//블럭은 생성되는 블럭함수
-const block = createGenesisBlock();
 //생성되는 블록함수 선언
 function createGenesisBlock() {
   const version = getVersion();
@@ -24,17 +23,13 @@ function createGenesisBlock() {
   const body = ["무기거래소 최초의 블럭"];
   const tree = merkle("sha256").sync(body);
   const merkleRoot = tree.root() || "0".repeat(64);
-  const difficulty = 0;
-  const nonce = 0;
 
   const header = new BlockHeader(
     version,
     index,
     previousHash,
     timestamp,
-    merkleRoot,
-    difficulty,
-    nonce
+    merkleRoot
   );
   return new Block(header, body);
 }
@@ -70,15 +65,13 @@ function nextBlock(bodyData) {
   const timestamp = parseInt(Date.now() / 1000);
   const tree = merkle("sha256").sync(bodyData);
   const merkleRoot = tree.root() || "0".repeat(64);
-  const difficulty = 0;
 
   const header = new BlockHeader(
     version,
     index,
     previousHash,
     timestamp,
-    merkleRoot,
-    difficulty
+    merkleRoot
   );
   return new Block(header, bodyData);
   //뒷부분을 좀 바꿀꺼다.
@@ -89,9 +82,9 @@ function addBlock(bodyData) {
   Blocks.push(newBlock);
 }
 
-addBlock(["transection1"]);
-addBlock(["transection2"]);
-addBlock(["transection3"]);
+// addBlock(["transection1"]);
+// addBlock(["transection2"]);
+// addBlock(["transection3"]);
 console.log(Blocks);
 
 //최초의 블록 다음의 블럭이다.
@@ -99,8 +92,17 @@ console.log(Blocks);
 // const block2 = nextBlock(["근접무기"]);
 // console.log(block1, block2);
 
-module.exports = { Blocks, getLastBlock, nextBlock, getBlocks, getVersion };
+module.exports = {
+  Blocks,
+  getLastBlock,
+  nextBlock,
+  getBlocks,
+  getVersion,
+  getBlocks,
+  addBlock,
+};
 
+/*
 //const { Blocks, getLastBlock, createHash } = requrie("")
 
 //const blockchain = [];
@@ -115,3 +117,4 @@ function hexToBinary(s) {}
 //지갑관련
 
 //블록관련
+*/
