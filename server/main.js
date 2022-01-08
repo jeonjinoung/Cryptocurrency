@@ -2,8 +2,9 @@
 const express = require("express");
 const { getBlocks, getVersion, nextBlock } = require("../blockchain/blocks");
 const { addBlock } = require("../utils/isValidBlock");
-const http_port = process.env.HTTP_PORT || 3001;
-const { connectToPeers, getSockets, initConnection } = require("./networks");
+const { connectToPeers, getSockets } = require("./networks");
+
+const http_port = process.env.HTTP_PORT || 4001;
 
 function initHttpServer() {
   const app = express();
@@ -13,13 +14,12 @@ function initHttpServer() {
     const data = req.body.data || [];
     connectToPeers(data);
     res.send(data);
-    res.send("success");
   });
 
   app.get("/peers", (req, res) => {
     let sockInfo = [];
     getSockets().forEach((s) => {
-      sockInfo.push(s._sockets.remoteAddress + ":" + s._sockets.remotePort);
+      sockInfo.push(s._socket.remoteAddress + ":" + s._socket.remotePort);
     });
     res.send(sockInfo);
   });
@@ -50,7 +50,6 @@ function initHttpServer() {
 }
 
 initHttpServer();
-initConnection();
 
 /*
 누구나 서버가 되기도하고 클라이언트가 되기도하면서 메세지를 보내고 받아야되는 소켓형태가 되어야한다.
@@ -68,7 +67,7 @@ curl -X GET http://localhost:3001/blocks | python3 -m json.tool
 curl -X GET http://localhost:3001/version
 
 그리고 우리가 추가의 피어를 만들어서 소켓을 만들어주려면 웹소켓을 만들어주고
-curl -H "Content-type:application/json" --data "{\"data\" : [ \"ws://localhost:6002\", \"ws://localhost:6003\"] }" http://localhost:3001/addPeers
+curl -H "Content-type:application/json" --data "{\"data\" : [ \"ws://localhost:7002\", \"ws://localhost:7003\"] }" http://localhost:4001/addPeers
 
 만들어준 웹소켓의 피어를 불러오려면
 curl -X GET http://localhost:3001/peers
