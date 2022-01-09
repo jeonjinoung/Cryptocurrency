@@ -10,13 +10,22 @@ function initHttpServer() {
   const app = express();
   app.use(express.json());
 
-  app.post("/addPeers", (req, res) => {
+  app.use((req, res, next) =>{
+    console.log(111111111111);
+    next();
+  });
+
+  app.get("/api/test", (req, res) => {
+    res.send("hello");
+  });
+
+  app.post("/api/addPeers", (req, res) => {
     const data = req.body.data || [];
     connectToPeers(data);
     res.send(data);
   });
 
-  app.get("/peers", (req, res) => {
+  app.get("/api/peers", (req, res) => {
     let sockInfo = [];
     getSockets().forEach((s) => {
       sockInfo.push(s._socket.remoteAddress + ":" + s._socket.remotePort);
@@ -24,22 +33,22 @@ function initHttpServer() {
     res.send(sockInfo);
   });
 
-  app.get("/blocks", (req, res) => {
+  app.get("/api/blocks", (req, res) => {
     res.send(getBlocks());
   });
 
-  app.post("/mineBlock", (req, res) => {
+  app.post("/api/mineBlock", (req, res) => {
     const data = req.body.data || [];
     const block = nextBlock(data);
     addBlock(block);
     res.send(block);
   });
 
-  app.get("/version", (req, res) => {
+  app.get("/api/version", (req, res) => {
     res.send(getVersion());
   });
 
-  app.post("/stop", (req, res) => {
+  app.post("/api/stop", (req, res) => {
     res.send({ msg: "Stop Server!" });
     process.exit();
   });
