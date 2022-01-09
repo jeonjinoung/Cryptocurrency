@@ -1,9 +1,9 @@
-const Dashboard = () => {
+const UserDefault = () => {
     return (
       <>
-        <p>안녕하세요</p>
+        <p>UserDefault</p>
       </>
     );
 };
 
-export default Dashboard;
+export default UserDefault;
