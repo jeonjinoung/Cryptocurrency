@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import Axios from 'axios';
 
 // material-ui
 import { Grid } from '@mui/material';
@@ -19,21 +18,18 @@ const Dashboard = () => {
     const [isLoading, setLoading] = useState(true);
     useEffect(() => {
         setLoading(false);
-
-        Axios.get('/api/test')
-            .then(response => console.log(response))
     }, []);
 
     return (
         <Grid container spacing={gridSpacing}>
             <Grid item xs={12}>
                 <Grid container spacing={gridSpacing}>
-                    <Grid item lg={4} md={6} sm={6} xs={12}>
+                    <Grid item lg={8} md={6} sm={6} xs={12}>
                         <EarningCard isLoading={isLoading} />
                     </Grid>
-                    <Grid item lg={4} md={6} sm={6} xs={12}>
+                    {/* <Grid item lg={4} md={6} sm={6} xs={12}>
                         <TotalOrderLineChartCard isLoading={isLoading} />
-                    </Grid>
+                    </Grid> */}
                     <Grid item lg={4} md={12} sm={12} xs={12}>
                         <Grid container spacing={gridSpacing}>
                             <Grid item sm={6} xs={12} md={6} lg={12}>

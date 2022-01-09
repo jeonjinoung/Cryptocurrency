@@ -1,9 +1,11 @@
+import EarningCard from "./EarningCard";
+
 const BlockDefault = () => {
-    return (
-      <>
-        <p>BlockDefault</p>
-      </>
-    );
+  return (
+    <>
+      <EarningCard />    
+    </>
+  );
 };
 
 export default BlockDefault;
