@@ -1,7 +1,7 @@
 const fs = require("fs");
 const merkle = require("merkle");
 
-const { Block, BlockHeader } = require("./blockchain");
+const { Block, BlockHeader } = require("./blockclass");
 const { createHash } = require("../utils/hash");
 
 function getVersion() {
