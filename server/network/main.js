@@ -70,7 +70,7 @@ curl -X GET http://localhost:3001/version
 curl -H "Content-type:application/json" --data "{\"data\" : [ \"ws://localhost:7002\", \"ws://localhost:7003\"] }" http://localhost:4001/addPeers
 
 만들어준 웹소켓의 피어를 불러오려면
-curl -X GET http://localhost:3001/peers
+curl -X GET http://localhost:4001/peers
 이렇게 하면된다는데?
 
 서버를 ctrl + c 말고 원격으로 끄게만드려면? / server.js 코드 추가 -> server 쪽에 코드를 수정 or 추가할 시에는 꼭 server를 껐다가 켜야함 !!!!!!* 
