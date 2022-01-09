@@ -20,7 +20,7 @@ const utilities = {
             id: 'util-typography',
             title: 'Typography',
             type: 'item',
-            url: '/utils/util-typography',
+            url: '/user',
             icon: icons.IconTypography,
             breadcrumbs: false
         },

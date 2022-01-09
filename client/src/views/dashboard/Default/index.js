@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Axios from 'axios';
 
 // material-ui
 import { Grid } from '@mui/material';
@@ -18,6 +19,9 @@ const Dashboard = () => {
     const [isLoading, setLoading] = useState(true);
     useEffect(() => {
         setLoading(false);
+
+        Axios.get('/api/test')
+            .then(response => console.log(response))
     }, []);
 
     return (
