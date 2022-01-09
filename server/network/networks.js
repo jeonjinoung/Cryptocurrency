@@ -49,78 +49,77 @@ function connectToPeers(newPeers) {
   });
 }
 
-// const MessageType = {
-//   QUERY_LATEST: 0,
-//   QUERY_ALL: 1,
-//   RESPONSE_BLOCKCHAIN: 2,
-// };
+const MessageType = {
+  QUERY_LATEST: 0,
+  QUERY_ALL: 1,
+  RESPONSE_BLOCKCHAIN: 2,
+};
 
-// // //
-// function initMessageHandler(ws) {
-//   ws.on("message", (data) => {
-//     const message = JSON.parse(data);
-//     switch (message.type) {
-//       case MessageType.QUERY_LATEST:
-//         write(ws, responseLatestMsg());
-//         break;
-//       case MessageType.QUERY_ALL:
-//         write(ws, responseAllChainMsg());
-//         break;
-//       case MessageType.RESPONSE_BLOCKCHAIN:
-//         handleBlockChainResponse(message);
-//         break;
-//     }
-//   });
-// }
+function initMessageHandler(ws) {
+  ws.on("message", (data) => {
+    const message = JSON.parse(data);
+    switch (message.type) {
+      case MessageType.QUERY_LATEST:
+        write(ws, responseLatestMsg());
+        break;
+      case MessageType.QUERY_ALL:
+        write(ws, responseAllChainMsg());
+        break;
+      case MessageType.RESPONSE_BLOCKCHAIN:
+        handleBlockChainResponse(message);
+        break;
+    }
+  });
+}
 
-// function responseLatestMsg() {
-//   return {
-//     type: RESPONSE_BLOCKCHAIN,
-//     data: JSON.stringify([getLastBlock()]),
-//   };
-// }
-// function responseAllChainMsg() {
-//   return {
-//     type: RESPONSE_BLOCKCHAIN,
-//     data: JSON.stringify(getBlocks()),
-//   };
-// }
+function responseLatestMsg() {
+  return {
+    type: QUERY_LATEST,
+    data: JSON.stringify([getLastBlock()]),
+  };
+}
+function responseAllChainMsg() {
+  return {
+    type: RESPONSE_BLOCKCHAIN,
+    data: JSON.stringify(getBlocks()),
+  };
+}
 
-// function handleBlockChainResponse(message) {
-//   const receiveBlocks = JSON.parse(message.data);
-//   const latestReceiveBlock = receiveBlocks[receiveBlocks.length - 1];
-//   const latestMyBlock = getLastBlock();
+function handleBlockChainResponse(message) {
+  const receiveBlocks = JSON.parse(message.data);
+  const latestReceiveBlock = receiveBlocks[receiveBlocks.length - 1];
+  const latestMyBlock = getLastBlock();
 
-//   if (latestReceiveBlock.header.index > latestMyBlock.header.index) {
-//     if (createHash(latestMyBlock) === latestReceiveBlock.header.previousHash) {
-//       if (addBlock(latestReceiveBlock)) {
-//         broadcast(responseLastestMsg());
-//       } else {
-//         console.log("Invaild Block!!");
-//       }
-//     } else if (receiveBlocks.length === 1) {
-//       broadcast(queryAllMsg());
-//     } else {
-//       replaceChain(receiveBlocks);
-//     }
-//   } else {
-//     console.log("Do nothing.");
-//   }
-// }
+  if (latestReceiveBlock.header.index > latestMyBlock.header.index) {
+    if (createHash(latestMyBlock) === latestReceiveBlock.header.previousHash) {
+      if (addBlock(latestReceiveBlock)) {
+        broadcast(responseLatestMsg());
+      } else {
+        console.log("Invaild Block!!");
+      }
+    } else if (receiveBlocks.length === 1) {
+      broadcast(queryAllMsg());
+    } else {
+      replaceChain(receiveBlocks);
+    }
+  } else {
+    console.log("Do nothing.");
+  }
+}
 
-// function queryAllMsg() {
-//   return {
-//     type: QUERY_ALL,
-//     data: null,
-//   };
-// }
+function queryAllMsg() {
+  return {
+    type: QUERY_ALL,
+    data: null,
+  };
+}
 
-// function queryLatestMsg() {
-//   return {
-//     type: QUERY_LATEST,
-//     data: null,
-//   };
-// }
+function queryLatestMsg() {
+  return {
+    type: QUERY_LATEST,
+    data: null,
+  };
+}
 
 function initErrorHandler(ws) {
   ws.on("close", () => {
@@ -140,6 +139,7 @@ module.exports = {
   connectToPeers,
   getSockets,
   initConnection,
+  initMessageHandler,
 };
 // const MessageType = {};
 
