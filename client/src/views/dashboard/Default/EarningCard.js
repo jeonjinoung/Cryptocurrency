@@ -58,19 +58,27 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 const EarningCard = ({ isLoading }) => {
     const [BodyBlock, setBodyBlock] = useState([]);    
-    const [HeaderBlock, setHeaderBlock] = useState([]);    
+    const [HeaderBlock, setHeaderBlock] = useState({});    
+    const [PreviousHash, setPreviousHash] = useState('');    
+    const [MerkleRoot, setMerkleRoot] = useState('');    
     const [anchorEl, setAnchorEl] = useState(null);
     const theme = useTheme();
 
+    const { index, timestamp, version } = HeaderBlock;
+    const previousHashDisplay = `${PreviousHash.substring(0, 15)}...`;
+    const merkleRootDisplay = `${MerkleRoot.substring(0, 15)}...`;
+
     useEffect(() => {
         Axios.get('/api/lastBlock')
-          .then(response => {
-              setBodyBlock(response.data.body)
-              console.log(response.data.header)
-              setHeaderBlock(response.data.header)
-          });
+        .then(response => {
+            setBodyBlock(response.data.body)
+            setHeaderBlock(response.data.header)
+            setPreviousHash(response.data.header.previousHash)
+            setMerkleRoot(response.data.header.merkleRoot)
+            setHeaderBlock(response.data.header)
+        });
     }, [])
-
+    
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -182,11 +190,11 @@ const EarningCard = ({ isLoading }) => {
                                         color: theme.palette.secondary[200]
                                     }}
                                 >
-                                    <div>index : {HeaderBlock.index}</div>
-                                    <div>previousHash : {HeaderBlock.previousHash}</div>
-                                    <div>timestamp : {HeaderBlock.timestamp}</div>
-                                    <div>merkleRoot : {HeaderBlock.merkleRoot}</div>
-                                    <div>version : {HeaderBlock.version}</div>
+                                    <div>Index : {index}</div>
+                                    <div>PreviousHash : {previousHashDisplay}</div>
+                                    <div>Timestamp : {new Date(timestamp).toLocaleString()}</div>
+                                    <div>MerkleRoot : {merkleRootDisplay}</div>
+                                    <div>Version : {version}</div>
                                 </Typography>
                             </Grid>
                         </Grid>
