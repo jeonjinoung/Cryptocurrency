@@ -1,12 +1,12 @@
 // assets
-import { IconTypography, IconPalette, IconShadow, IconWindmill } from '@tabler/icons';
+import { IconTypography, IconUser, IconWallet, IconCurrencyBitcoin } from '@tabler/icons';
 
 // constant
 const icons = {
     IconTypography,
-    IconPalette,
-    IconShadow,
-    IconWindmill
+    IconUser,
+    IconWallet,
+    IconCurrencyBitcoin
 };
 
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
@@ -18,26 +18,26 @@ const utilities = {
     children: [
         {
             id: 'util-typography',
-            title: 'Typography',
+            title: 'User',
             type: 'item',
             url: '/user',
-            icon: icons.IconTypography,
+            icon: icons.IconUser,
             breadcrumbs: false
         },
         {
-            id: 'util-color',
-            title: 'Color',
+            id: 'util-Block',
+            title: 'Block',
             type: 'item',
-            url: '/utils/util-color',
-            icon: icons.IconPalette,
+            url: '/block',
+            icon: icons.IconCurrencyBitcoin,
             breadcrumbs: false
         },
         {
-            id: 'util-shadow',
-            title: 'Shadow',
+            id: 'util-Wallet',
+            title: 'Wallet',
             type: 'item',
-            url: '/utils/util-shadow',
-            icon: icons.IconShadow,
+            url: '/wallet',
+            icon: icons.IconWallet,
             breadcrumbs: false
         }
     ]
