@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/material/styles';
 import { StyledEngineProvider } from '@mui/material';
 
 import MainLayout from './layout';
+import UserLayout from './layout/User';
 
 // defaultTheme
 import themes from './themes';
@@ -19,7 +20,8 @@ const App = () => {
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={themes(customization)}>
                 <Routes>
-                    <Route path="/" element={<MainLayout />} />
+                    <Route path="/free" element={<MainLayout />} />
+                    <Route path="/free/user" element={<UserLayout />} />
                 </Routes>
             </ThemeProvider>
         </StyledEngineProvider>
