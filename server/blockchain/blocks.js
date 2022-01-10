@@ -47,6 +47,12 @@ let Blocks = [createGenesisBlock()];
 function getBlocks() {
   return Blocks;
 }
+
+function getLastBlocks() {
+  let lastBlock = Blocks[Blocks.length - 1];
+  return lastBlock;
+}
+
 //마지막 블럭 선언
 function getLastBlock() {
   //마지막블럭은 블럭의 길이보다 하나 뺀다.
@@ -100,6 +106,7 @@ module.exports = {
   getVersion,
   getBlocks,
   addBlock,
+  getLastBlocks,
 };
 
 /*
