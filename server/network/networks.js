@@ -1,6 +1,5 @@
 /* P2P Server (노드와 노드 간의 통신) */
 const WebSocket = require("ws");
-const p2p_port = process.env.P2P_PORT || 7001;
 
 //wsinit
 function initP2PServer(test_port) {
@@ -10,10 +9,6 @@ function initP2PServer(test_port) {
   });
   console.log("Listening webSocket port : " + test_port);
 }
-
-initP2PServer(7001);
-initP2PServer(7002);
-initP2PServer(7003);
 
 let sockets = [];
 
@@ -78,6 +73,7 @@ function responseLatestMsg() {
     data: JSON.stringify([getLastBlock()]),
   };
 }
+
 function responseAllChainMsg() {
   return {
     type: RESPONSE_BLOCKCHAIN,
@@ -140,6 +136,9 @@ module.exports = {
   getSockets,
   initConnection,
   initMessageHandler,
+  initP2PServer,
+  broadcast,
+  handleBlockChainResponse,
 };
 // const MessageType = {};
 
