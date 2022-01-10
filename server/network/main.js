@@ -1,23 +1,15 @@
 /* HTTP Server (사용자와 노드 간의 통신) */
 const express = require("express");
-const { getBlocks, getVersion, nextBlock } = require("../blockchain/blocks");
+const { getBlocks, getVersion, nextBlock, getLastBlocks } = require("../blockchain/blocks");
 const { addBlock } = require("../utils/isValidBlock");
-const { connectToPeers, getSockets } = require("./networks");
+const { connectToPeers, getSockets, initP2PServer, broadcast } = require("./networks");
 
-const http_port = process.env.HTTP_PORT || 4001;
+const HTTP_PORT = process.env.HTTP_PORT || 4001;
+const P2P_PORT = process.env.P2P_PORT || 7001;
 
 function initHttpServer() {
   const app = express();
   app.use(express.json());
-
-  app.use((req, res, next) =>{
-    console.log(111111111111);
-    next();
-  });
-
-  app.get("/api/test", (req, res) => {
-    res.send("hello");
-  });
 
   app.post("/api/addPeers", (req, res) => {
     const data = req.body.data || [];
@@ -37,10 +29,15 @@ function initHttpServer() {
     res.send(getBlocks());
   });
 
+  app.get("/api/lastBlock", (req, res) => {
+    res.send(getLastBlocks());
+  });
+
   app.post("/api/mineBlock", (req, res) => {
     const data = req.body.data || [];
     const block = nextBlock(data);
     addBlock(block);
+    broadcast(block);
     res.send(block);
   });
 
@@ -53,12 +50,13 @@ function initHttpServer() {
     process.exit();
   });
 
-  app.listen(http_port, () => {
-    console.log("Listening Http Port : " + http_port);
+  app.listen(HTTP_PORT, () => {
+    console.log("Listening Http Port : " + HTTP_PORT);
   });
 }
 
 initHttpServer();
+initP2PServer(P2P_PORT);
 
 /*
 누구나 서버가 되기도하고 클라이언트가 되기도하면서 메세지를 보내고 받아야되는 소켓형태가 되어야한다.

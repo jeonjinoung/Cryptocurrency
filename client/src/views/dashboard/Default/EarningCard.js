@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useEffect, useState } from "react";
+import Axios from "axios";
 
 // material-ui
 import { styled, useTheme } from '@mui/material/styles';
@@ -10,7 +11,6 @@ import MainCard from '../../../ui-component/cards/MainCard';
 import SkeletonEarningCard from '../../../ui-component/cards/Skeleton/EarningCard';
 
 // assets
-import EarningIcon from '../../../assets/images/icons/earning.svg';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import GetAppTwoToneIcon from '@mui/icons-material/GetAppOutlined';
@@ -57,10 +57,28 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
 const EarningCard = ({ isLoading }) => {
+    const [BodyBlock, setBodyBlock] = useState([]);    
+    const [HeaderBlock, setHeaderBlock] = useState({});    
+    const [PreviousHash, setPreviousHash] = useState('');    
+    const [MerkleRoot, setMerkleRoot] = useState('');    
+    const [anchorEl, setAnchorEl] = useState(null);
     const theme = useTheme();
 
-    const [anchorEl, setAnchorEl] = useState(null);
+    const { index, timestamp, version } = HeaderBlock;
+    const previousHashDisplay = `${PreviousHash.substring(0, 15)}...`;
+    const merkleRootDisplay = `${MerkleRoot.substring(0, 15)}...`;
 
+    useEffect(() => {
+        Axios.get('/api/lastBlock')
+        .then(response => {
+            setBodyBlock(response.data.body)
+            setHeaderBlock(response.data.header)
+            setPreviousHash(response.data.header.previousHash)
+            setMerkleRoot(response.data.header.merkleRoot)
+            setHeaderBlock(response.data.header)
+        });
+    }, [])
+    
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
@@ -75,7 +93,7 @@ const EarningCard = ({ isLoading }) => {
                 <SkeletonEarningCard />
             ) : (
                 <CardWrapper border={false} content={false}>
-                    <Box sx={{ p: 2.25 }}>
+                    <Box sx={{ p: 6.25 }}>
                         <Grid container direction="column">
                             <Grid item>
                                 <Grid container justifyContent="space-between">
@@ -89,8 +107,11 @@ const EarningCard = ({ isLoading }) => {
                                                 mt: 1
                                             }}
                                         >
-                                            <img src={EarningIcon} alt="Notification" />
+                                            {/* <img src={EarningIcon} alt="Notification" /> */}
                                         </Avatar>
+                                    </Grid>
+                                    <Grid item>
+                                        LAST BLOCK
                                     </Grid>
                                     <Grid item>
                                         <Avatar
@@ -125,16 +146,16 @@ const EarningCard = ({ isLoading }) => {
                                             }}
                                         >
                                             <MenuItem onClick={handleClose}>
-                                                <GetAppTwoToneIcon sx={{ mr: 1.75 }} /> Import Card
+                                                <GetAppTwoToneIcon sx={{ mr: 1.75 }} /> 1번 예정
                                             </MenuItem>
                                             <MenuItem onClick={handleClose}>
-                                                <FileCopyTwoToneIcon sx={{ mr: 1.75 }} /> Copy Data
+                                                <FileCopyTwoToneIcon sx={{ mr: 1.75 }} /> 2번 예정
                                             </MenuItem>
                                             <MenuItem onClick={handleClose}>
-                                                <PictureAsPdfTwoToneIcon sx={{ mr: 1.75 }} /> Export
+                                                <PictureAsPdfTwoToneIcon sx={{ mr: 1.75 }} /> 3번 예정
                                             </MenuItem>
                                             <MenuItem onClick={handleClose}>
-                                                <ArchiveTwoToneIcon sx={{ mr: 1.75 }} /> Archive File
+                                                <ArchiveTwoToneIcon sx={{ mr: 1.75 }} /> 4번 예정
                                             </MenuItem>
                                         </Menu>
                                     </Grid>
@@ -144,7 +165,7 @@ const EarningCard = ({ isLoading }) => {
                                 <Grid container alignItems="center">
                                     <Grid item>
                                         <Typography sx={{ fontSize: '2.125rem', fontWeight: 500, mr: 1, mt: 1.75, mb: 0.75 }}>
-                                            $500.00
+                                            {BodyBlock}
                                         </Typography>
                                     </Grid>
                                     <Grid item>
@@ -169,12 +190,17 @@ const EarningCard = ({ isLoading }) => {
                                         color: theme.palette.secondary[200]
                                     }}
                                 >
-                                    Total Earning
+                                    <div>Index : {index}</div>
+                                    <div>PreviousHash : {previousHashDisplay}</div>
+                                    <div>Timestamp : {new Date(timestamp).toLocaleString()}</div>
+                                    <div>MerkleRoot : {merkleRootDisplay}</div>
+                                    <div>Version : {version}</div>
                                 </Typography>
                             </Grid>
                         </Grid>
                     </Box>
-                </CardWrapper>
+                </CardWrapper> 
+
             )}
         </>
     );

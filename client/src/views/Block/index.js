@@ -1,9 +1,11 @@
+import BlocksCard from "./BlocksCard";
+
 const BlockDefault = () => {
-    return (
-      <>
-        <p>BlockDefault</p>
-      </>
-    );
+  return (
+    <>
+      <BlocksCard />    
+    </>
+  );
 };
 
 export default BlockDefault;
