@@ -57,7 +57,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
-const EarningCard = ({ isLoading }) => {
+const BlocksCard = ({ isLoading }) => {
     const [Blocks, setBlocks] = useState([]);    
 
     useEffect(() => {
@@ -86,7 +86,7 @@ const EarningCard = ({ isLoading }) => {
             {isLoading ? (
                 <SkeletonEarningCard />
             ) : (
-                Blocks && Blocks.map(block => {
+                Blocks && Blocks.reverse().map(block => {
                     return (
                         <CardWrapper border={false} content={false}>
                             <Box sx={{ p: 6.25 }}>
@@ -105,6 +105,9 @@ const EarningCard = ({ isLoading }) => {
                                                 >
                                                     {/* <img src={EarningIcon} alt="Notification" /> */}
                                                 </Avatar>
+                                            </Grid>
+                                            <Grid item>
+                                                {block.header.index + 1} 번째 블록
                                             </Grid>
                                             <Grid item>
                                                 <Avatar
@@ -196,8 +199,8 @@ const EarningCard = ({ isLoading }) => {
     );
 };
 
-EarningCard.propTypes = {
+BlocksCard.propTypes = {
     isLoading: PropTypes.bool
 };
 
-export default EarningCard;
+export default BlocksCard;

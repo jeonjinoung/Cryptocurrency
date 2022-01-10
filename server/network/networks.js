@@ -11,10 +11,6 @@ function initP2PServer(test_port) {
   console.log("Listening webSocket port : " + test_port);
 }
 
-initP2PServer(7001);
-initP2PServer(7002);
-initP2PServer(7003);
-
 let sockets = [];
 
 function initConnection(ws) {
@@ -78,6 +74,7 @@ function responseLatestMsg() {
     data: JSON.stringify([getLastBlock()]),
   };
 }
+
 function responseAllChainMsg() {
   return {
     type: RESPONSE_BLOCKCHAIN,
@@ -140,6 +137,9 @@ module.exports = {
   getSockets,
   initConnection,
   initMessageHandler,
+  initP2PServer,
+  broadcast,
+  handleBlockChainResponse,
 };
 // const MessageType = {};
 

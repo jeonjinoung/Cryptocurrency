@@ -2,7 +2,7 @@
 const express = require("express");
 const { getBlocks, getVersion, nextBlock, getLastBlocks } = require("../blockchain/blocks");
 const { addBlock } = require("../utils/isValidBlock");
-const { connectToPeers, getSockets } = require("./networks");
+const { connectToPeers, getSockets, initP2PServer, broadcast } = require("./networks");
 
 const http_port = process.env.HTTP_PORT || 4001;
 
@@ -36,6 +36,7 @@ function initHttpServer() {
     const data = req.body.data || [];
     const block = nextBlock(data);
     addBlock(block);
+    broadcast(block);
     res.send(block);
   });
 
@@ -54,6 +55,7 @@ function initHttpServer() {
 }
 
 initHttpServer();
+initP2PServer(7001);
 
 /*
 누구나 서버가 되기도하고 클라이언트가 되기도하면서 메세지를 보내고 받아야되는 소켓형태가 되어야한다.

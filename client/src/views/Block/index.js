@@ -1,9 +1,9 @@
-import EarningCard from "./EarningCard";
+import BlocksCard from "./BlocksCard";
 
 const BlockDefault = () => {
   return (
     <>
-      <EarningCard />    
+      <BlocksCard />    
     </>
   );
 };
