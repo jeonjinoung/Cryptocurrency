@@ -1,5 +1,8 @@
 /* P2P Server (노드와 노드 간의 통신) */
 const WebSocket = require("ws");
+const { getLastBlock, getBlocks, replaceChain } = require("../blockchain/blocks");
+const { addBlock } = require("../utils/isValidBlock");
+const { createHash } = require('../utils/hash');
 
 //wsinit
 function initP2PServer(test_port) {
@@ -7,14 +10,19 @@ function initP2PServer(test_port) {
   server.on("connection", (ws) => {
     initConnection(ws);
   });
+  server.on("error", () => {
+    console.log("error")
+  });
   console.log("Listening webSocket port : " + test_port);
 }
 
 let sockets = [];
 
 function initConnection(ws) {
-  console.log(ws._socket.remotePort);
   sockets.push(ws);
+  initMessageHandler(ws);
+  initErrorHandler(ws);
+  write(ws, queryLatestMsg());
 }
 
 function getSockets() {
@@ -53,6 +61,11 @@ const MessageType = {
 function initMessageHandler(ws) {
   ws.on("message", (data) => {
     const message = JSON.parse(data);
+    
+    if (message === null) {
+      return;
+    }
+
     switch (message.type) {
       case MessageType.QUERY_LATEST:
         write(ws, responseLatestMsg());
@@ -69,14 +82,14 @@ function initMessageHandler(ws) {
 
 function responseLatestMsg() {
   return {
-    type: QUERY_LATEST,
+    type: MessageType.RESPONSE_BLOCKCHAIN,
     data: JSON.stringify([getLastBlock()]),
   };
 }
 
 function responseAllChainMsg() {
   return {
-    type: RESPONSE_BLOCKCHAIN,
+    type: MessageType.RESPONSE_BLOCKCHAIN,
     data: JSON.stringify(getBlocks()),
   };
 }
@@ -86,9 +99,16 @@ function handleBlockChainResponse(message) {
   const latestReceiveBlock = receiveBlocks[receiveBlocks.length - 1];
   const latestMyBlock = getLastBlock();
 
+  if (receiveBlocks.length === 0) {
+    console.log("받은 블록체인이 존재하지 않습니다.");
+    return;
+  }
+
+  /* 두 블록체인의 길이 비교 */
   if (latestReceiveBlock.header.index > latestMyBlock.header.index) {
     if (createHash(latestMyBlock) === latestReceiveBlock.header.previousHash) {
       if (addBlock(latestReceiveBlock)) {
+        console.log("가즈아")
         broadcast(responseLatestMsg());
       } else {
         console.log("Invaild Block!!");
@@ -105,14 +125,15 @@ function handleBlockChainResponse(message) {
 
 function queryAllMsg() {
   return {
-    type: QUERY_ALL,
+    type: MessageType.QUERY_ALL,
     data: null,
   };
 }
 
+/* 연결 되자마자 처음 보냄 */
 function queryLatestMsg() {
   return {
-    type: QUERY_LATEST,
+    type: MessageType.QUERY_LATEST,
     data: null,
   };
 }

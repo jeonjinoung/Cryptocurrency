@@ -1,6 +1,6 @@
 /* HTTP Server (사용자와 노드 간의 통신) */
 const express = require("express");
-const { getBlocks, getVersion, nextBlock, getLastBlocks } = require("../blockchain/blocks");
+const { getBlocks, getVersion, nextBlock, getLastBlock } = require("../blockchain/blocks");
 const { addBlock } = require("../utils/isValidBlock");
 const { connectToPeers, getSockets, initP2PServer, broadcast } = require("./networks");
 
@@ -30,7 +30,7 @@ function initHttpServer() {
   });
 
   app.get("/api/lastBlock", (req, res) => {
-    res.send(getLastBlocks());
+    res.send(getLastBlock());
   });
 
   app.post("/api/mineBlock", (req, res) => {
