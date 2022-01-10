@@ -1,6 +1,5 @@
 /* P2P Server (노드와 노드 간의 통신) */
 const WebSocket = require("ws");
-const p2p_port = process.env.P2P_PORT || 7001;
 
 //wsinit
 function initP2PServer(test_port) {

@@ -4,7 +4,8 @@ const { getBlocks, getVersion, nextBlock, getLastBlocks } = require("../blockcha
 const { addBlock } = require("../utils/isValidBlock");
 const { connectToPeers, getSockets, initP2PServer, broadcast } = require("./networks");
 
-const http_port = process.env.HTTP_PORT || 4001;
+const HTTP_PORT = process.env.HTTP_PORT || 4001;
+const P2P_PORT = process.env.P2P_PORT || 7001;
 
 function initHttpServer() {
   const app = express();
@@ -49,13 +50,13 @@ function initHttpServer() {
     process.exit();
   });
 
-  app.listen(http_port, () => {
-    console.log("Listening Http Port : " + http_port);
+  app.listen(HTTP_PORT, () => {
+    console.log("Listening Http Port : " + HTTP_PORT);
   });
 }
 
 initHttpServer();
-initP2PServer(7001);
+initP2PServer(P2P_PORT);
 
 /*
 누구나 서버가 되기도하고 클라이언트가 되기도하면서 메세지를 보내고 받아야되는 소켓형태가 되어야한다.
