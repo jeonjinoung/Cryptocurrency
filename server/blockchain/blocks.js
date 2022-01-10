@@ -3,7 +3,7 @@ const merkle = require("merkle");
 const cryptojs = require('crypto-js');
 
 const BLOCK_GENERATION_INTERVAL = 10  // 초단위
-const DIFFICULTY_ADJUSTMENT_INTERVAL = 10 // 블록이 생성되는 간격(난이도 간격)
+const DIFFICULTY_ADJUSTMENT_INTERVAL = 3 // 블록이 생성되는 간격(난이도 간격)
 
 const { Block, BlockHeader } = require("./blockclass");
 const { createHash } = require("../utils/hash");
@@ -56,7 +56,7 @@ function nextBlock(bodyData) {
 }
 
 function replaceChain(newBlocks) {
-  if (isValidChain(newBlocks)) {
+  if (isValidChain(newBlocks)) {  // 순환 에러 해결 중
     if ((newBlocks.length > Blocks.length) || (newBlocks.length === Blocks.length)) {
       Blocks = newBlocks;
       broadcast(responseLatestMsg());
@@ -111,22 +111,6 @@ function calcurateHash(version, previousHash, timestamp, merkleRoot, difficulty,
   return hash;
 };
 
-function isValidChain(newBlocks) {
-  if(JSON.stringify(newBlocks[0]) !== JSON.stringify(Blocks[0])) {
-    return false;
-  };
-
-  var tempBlocks = [newBlocks[0]];
-  for (var i = 0; i < newBlocks.length; i++) {    
-    if (isValidNewBlock(newBlocks[i], tempBlocks[i - 1])) {
-      tempBlocks.push(newBlocks[i]);
-    } else {
-      return false;
-    }
-  };
-  return true;
-};
-
 function getDifficulty(blocks) {
   const lastBlock = blocks[blocks.length - 1];
   if (lastBlock.header.index !== 0 && 
@@ -138,8 +122,8 @@ function getDifficulty(blocks) {
 };
 
 function getAdjustDifficulty(lastBlock, blocks) {
-  const prevAdjustmentBlock = blocks[blocks.length - BLOCK_GENERATION_INTERVAL];
-  const elapsedTime = lastBlock.timestamp - prevAdjustmentBlock.header.timestamp;
+  const prevAdjustmentBlock = blocks[blocks.length - DIFFICULTY_ADJUSTMENT_INTERVAL];
+  const elapsedTime = lastBlock.header.timestamp - prevAdjustmentBlock.header.timestamp;
   const expectedTime = BLOCK_GENERATION_INTERVAL * DIFFICULTY_ADJUSTMENT_INTERVAL;
 
   if (expectedTime / 2 > elapsedTime) {
@@ -151,6 +135,26 @@ function getAdjustDifficulty(lastBlock, blocks) {
   };
 };
 
+function getCurrentTimestamp() {
+  return Math.round(new Date().getTime() / 1000);
+}
+
+function isValidTimestamp(newBlock, prevBlock) {
+  /* 최초의 블록은 검색예외 보존 */
+  if (prevBlock.header.timestamp === 1231006505) {
+    return true;
+  }
+
+  if (newBlock.header.timestamp - prevBlock.header.timestamp > 60) {
+    return false;
+  }
+
+  if (newBlock.header.timestamp - getCurrentTimestamp() > 60) {
+    return false;
+  }
+  return true;
+}
+
 module.exports = {
   Blocks,
   getLastBlock,
@@ -159,4 +163,6 @@ module.exports = {
   getVersion,
   replaceChain,
   getDifficulty,
+  isValidTimestamp,
+  hashMatchesDifficulty,
 };
