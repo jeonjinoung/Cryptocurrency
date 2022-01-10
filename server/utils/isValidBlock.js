@@ -1,5 +1,5 @@
 const merkle = require("merkle");
-const { Blocks, getLastBlock } = require("../blockchain/blocks");
+const { Blocks, getLastBlock, getDifficulty } = require("../blockchain/blocks");
 const { createHash } = require("./hash");
 
 function isValidBlockStructure(block) {
@@ -39,26 +39,18 @@ function isValidNewBlock(newBlock, previousBlock) {
   return true;
 }
 
-
-function isValidChain(newBlocks) {
-  if(JSON.stringify(newBlocks[0]) !== JSON.stringify(Blocks[0])) {
-    return false;
-  }
-
-  var tempBlocks = [newBlocks[0]];
-  for (var i = 0; i < newBlocks.length; i++) {    
-    if (isValidNewBlock(newBlocks[i], tempBlocks[i - 1])) {
-      tempBlocks.push(newBlocks[i]);
-    } else {
-      return false;
-    }
-  }
-  return true;
-}
-
 function addBlock(newBlock) {
   if (isValidNewBlock(newBlock, getLastBlock())) {
+    console.log(33333333333333)
+    console.log(newBlock)
+    console.log(2222222222222)
+
     Blocks.push(newBlock);
+    const difficultyBlock = getDifficulty(Blocks);
+    console.log(77777777);
+    console.log(difficultyBlock);
+    console.log(88888888);
+    
     return true;
   }
   return false;
@@ -66,5 +58,5 @@ function addBlock(newBlock) {
 
 module.exports = {
   addBlock,
-  isValidChain,
+  isValidNewBlock,
 };
