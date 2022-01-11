@@ -2,6 +2,7 @@
 const express = require("express");
 const { getBlocks, getVersion, nextBlock, getLastBlock } = require("../blockchain/blocks");
 const { addBlock } = require("../utils/isValidBlock");
+const { getPublicKeyFromWallet } = require("../wallet/wallet");
 const { connectToPeers, getSockets, initP2PServer, broadcast } = require("./networks");
 
 const HTTP_PORT = process.env.HTTP_PORT || 4001;
@@ -50,7 +51,7 @@ function initHttpServer() {
     process.exit();
   });
 
-  app.get("/address", (req, res) => {
+  app.get("/api/address", (req, res) => {
     const address = getPublicKeyFromWallet().toString();
     if (address != "") {
       res.send({"address" : address});
