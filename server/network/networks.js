@@ -140,8 +140,3 @@ module.exports = {
   broadcast,
   handleBlockChainResponse,
 };
-// const MessageType = {};
-
-// const sockets = [];
-
-// function initP2PServer() {}
