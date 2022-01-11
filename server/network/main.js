@@ -50,6 +50,15 @@ function initHttpServer() {
     process.exit();
   });
 
+  app.get("/address", (req, res) => {
+    const address = getPublicKeyFromWallet().toString();
+    if (address != "") {
+      res.send({"address" : address});
+    } else {
+      res.send("empty address!");
+    }
+  });
+
   app.listen(HTTP_PORT, () => {
     console.log("Listening Http Port : " + HTTP_PORT);
   });
