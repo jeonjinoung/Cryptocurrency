@@ -31,10 +31,7 @@ function isValidNewBlock(newBlock, previousBlock) {
   } else if (!isValidTimestamp(newBlock, previousBlock)) {
     console.log("Invalid Timestamp");
     return false;
-  } else if (!hashMatchesDifficulty(createHash(newBlock), newBlock.header.difficulty)) {
-    console.log("Invalid hash");
-    return false;
-  }
+  } 
   
   return true;
 }
@@ -62,13 +59,11 @@ function addBlock(newBlock) {
     const { body } = newBlock;
 
     const newDifficulty = getDifficulty(Blocks);
-    console.log("난이도", newDifficulty);
     
-    const header = new BlockHeader(version, index, previousHash, timestamp, merkleRoot, newDifficulty, nonce)
-    const newDifficultyBlock = new Block(header, body)
+    const header = new BlockHeader(version, index, previousHash, timestamp, merkleRoot, newDifficulty, nonce);
+    const newDifficultyBlock = new Block(header, body);
 
     Blocks.push(newDifficultyBlock);
-
     return true;
   }
   return false;
