@@ -1,9 +1,11 @@
+import Wallet from "./Wallet";
+
 const WalletDefault = () => {
-    return (
-      <>
-        <p>WalletDefault</p>
-      </>
-    );
+  return (
+    <>
+      <Wallet />
+    </>
+  );
 };
 
 export default WalletDefault;
