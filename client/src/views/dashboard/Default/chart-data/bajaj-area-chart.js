@@ -1,6 +1,6 @@
 // ===========================|| DASHBOARD - BAJAJ AREA CHART ||=========================== //
 
-const chartData = {
+let chartData = {
     type: 'area',
     height: 95,
     options: {
@@ -34,7 +34,7 @@ const chartData = {
     },
     series: [
         {
-            data: [0, 15, 10, 50, 30, 40, 25]
+            data: [19, 15, 10, 50, 30, 40, 25]
         }
     ]
 };

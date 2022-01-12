@@ -14,7 +14,7 @@ import chartData from './chart-data/bajaj-area-chart';
 
 // ===========================|| DASHBOARD DEFAULT - BAJAJ AREA CHART CARD ||=========================== //
 
-const BajajAreaChartCard = () => {
+const BajajAreaChartCard = ({ Test }) => {
     const theme = useTheme();
     const customization = useSelector((state) => state.customization);
     const { navType } = customization;
@@ -29,9 +29,11 @@ const BajajAreaChartCard = () => {
                 theme: 'light'
             }
         };
+        chartData.series[0].data[0] = Test
         ApexCharts.exec(`support-chart`, 'updateOptions', newSupportChart);
-    }, [navType, orangeDark]);
+    }, [navType, orangeDark, Test]);
 
+    console.log(chartData.series[0].data[0]);
     return (
         <Card sx={{ bgcolor: 'secondary.light' }}>
             <Grid container sx={{ p: 2, pb: 0, color: '#fff' }}>

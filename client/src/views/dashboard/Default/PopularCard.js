@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
+import Axios from 'axios';
 // material-ui
 import { useTheme } from '@mui/material/styles';
 import { Avatar, Button, CardActions, CardContent, Divider, Grid, Menu, MenuItem, Typography } from '@mui/material';
@@ -21,6 +21,7 @@ import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDown
 
 const PopularCard = ({ isLoading }) => {
     const theme = useTheme();
+    const [Test, setTest] = useState(0);
 
     const [anchorEl, setAnchorEl] = useState(null);
 
@@ -31,6 +32,16 @@ const PopularCard = ({ isLoading }) => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    useEffect(() => {
+        setInterval(() =>{
+            Axios.get("/api/lastBlock")
+                .then(response => {
+                    console.log(response.data.header.index)
+                    setTest(response.data.header.index);
+                })
+        }, 1000)
+    }, []);
 
     return (
         <>
@@ -80,7 +91,7 @@ const PopularCard = ({ isLoading }) => {
                                 </Grid>
                             </Grid>
                             <Grid item xs={12} sx={{ pt: '16px !important' }}>
-                                <BajajAreaChartCard />
+                                <BajajAreaChartCard Test={Test}/>
                             </Grid>
                             <Grid item xs={12}>
                                 <Grid container direction="column">
