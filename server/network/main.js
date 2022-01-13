@@ -1,5 +1,6 @@
 /* HTTP Server (사용자와 노드 간의 통신) */
 const express = require("express");
+<<<<<<< HEAD
 const {
   getBlocks,
   getVersion,
@@ -14,6 +15,12 @@ const {
   broadcast,
 } = require("./networks");
 const { work } = require("../scripts/average-work");
+=======
+const { getBlocks, getVersion, nextBlock, getLastBlock } = require("../blockchain/blocks");
+const { getPublicKeyFromWallet } = require("../wallet/wallet");
+const { connectToPeers, getSockets, initP2PServer, broadcast } = require("./networks");
+const { work } = require('../scripts/average-work');
+>>>>>>> origin/development
 
 const HTTP_PORT = process.env.HTTP_PORT || 4001;
 const P2P_PORT = process.env.P2P_PORT || 7001;
@@ -26,9 +33,16 @@ function initHttpServer() {
     console.log(11111);
     console.log(req.body);
     console.log(33333);
+<<<<<<< HEAD
     const data = req.body.data || [];
     connectToPeers(data);
     res.send(data);
+=======
+    
+    // const data = req.body.data || [];
+    // connectToPeers(data);
+    // res.send(data);
+>>>>>>> origin/development
   });
 
   app.post("/api/addUser", (req, res) => {
@@ -56,7 +70,11 @@ function initHttpServer() {
   app.post("/api/mineBlock", (req, res) => {
     const { addBlock } = require("../utils/isValidBlock");
     // work();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> origin/development
     const data = req.body.data || [];
     const block = nextBlock(data);
     addBlock(block);
