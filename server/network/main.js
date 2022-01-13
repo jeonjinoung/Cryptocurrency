@@ -1,8 +1,9 @@
 /* HTTP Server (사용자와 노드 간의 통신) */
 const express = require("express");
-const { getBlocks, getVersion, nextBlock, getLastBlocks } = require("../blockchain/blocks");
-const { addBlock } = require("../utils/isValidBlock");
+const { getBlocks, getVersion, nextBlock, getLastBlock } = require("../blockchain/blocks");
+const { getPublicKeyFromWallet } = require("../wallet/wallet");
 const { connectToPeers, getSockets, initP2PServer, broadcast } = require("./networks");
+const { work } = require('../scripts/average-work');
 
 const HTTP_PORT = process.env.HTTP_PORT || 4001;
 const P2P_PORT = process.env.P2P_PORT || 7001;
@@ -12,9 +13,13 @@ function initHttpServer() {
   app.use(express.json());
 
   app.post("/api/addPeers", (req, res) => {
-    const data = req.body.data || [];
-    connectToPeers(data);
-    res.send(data);
+    console.log(11111);
+    console.log(req.body);
+    console.log(33333);
+    
+    // const data = req.body.data || [];
+    // connectToPeers(data);
+    // res.send(data);
   });
 
   app.get("/api/peers", (req, res) => {
@@ -30,14 +35,17 @@ function initHttpServer() {
   });
 
   app.get("/api/lastBlock", (req, res) => {
-    res.send(getLastBlocks());
+    res.send(getLastBlock());
   });
 
   app.post("/api/mineBlock", (req, res) => {
+    const { addBlock } = require("../utils/isValidBlock");
+    // work();
+    
     const data = req.body.data || [];
     const block = nextBlock(data);
     addBlock(block);
-    broadcast(block);
+    // broadcast(block);
     res.send(block);
   });
 
@@ -48,6 +56,15 @@ function initHttpServer() {
   app.post("/api/stop", (req, res) => {
     res.send({ msg: "Stop Server!" });
     process.exit();
+  });
+
+  app.get("/api/address", (req, res) => {
+    const address = getPublicKeyFromWallet().toString();
+    if (address != "") {
+      res.send({"address" : address});
+    } else {
+      res.send("empty address!");
+    }
   });
 
   app.listen(HTTP_PORT, () => {
