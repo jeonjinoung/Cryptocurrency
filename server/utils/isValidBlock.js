@@ -66,16 +66,8 @@ function replaceChain(newBlocks) {
 
 function addBlock(newBlock) {
   if (isValidNewBlock(newBlock, getLastBlock())) {
-    const { version, index, previousHash, timestamp, merkleRoot, nonce } = newBlock.header;
-    const { body } = newBlock;
+    Blocks.push(newBlock);
 
-    const newDifficulty = getDifficulty(Blocks);
-    
-    const header = new BlockHeader(version, index, previousHash, timestamp, merkleRoot, newDifficulty, nonce);
-    const newDifficultyBlock = new Block(header, body);
-
-    Blocks.push(newDifficultyBlock);
-    broadcast(responseLatestMsg());
     return true;
   }
   return false;

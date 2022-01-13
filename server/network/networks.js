@@ -1,6 +1,6 @@
 /* P2P Server (노드와 노드 간의 통신) */
 const WebSocket = require("ws");
-const { getLastBlock, getBlocks, replaceChain } = require("../blockchain/blocks");
+const { getLastBlock, getBlocks } = require("../blockchain/blocks");
 const { createHash } = require('../utils/hash');
 
 //wsinit
@@ -95,7 +95,7 @@ function responseAllChainMsg() {
 }
 
 function handleBlockChainResponse(message) {
-  const { addBlock } = require("../utils/isValidBlock");
+  const { addBlock, replaceChain } = require("../utils/isValidBlock");
 
   const receiveBlocks = JSON.parse(message.data);
   const latestReceiveBlock = receiveBlocks[receiveBlocks.length - 1];

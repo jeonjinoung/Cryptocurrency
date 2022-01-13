@@ -5,7 +5,7 @@ import { StyledEngineProvider } from '@mui/material';
 
 import MainLayout from './layout';
 import Dashboard from './views/dashboard/Default';
-import UserDefault from './views/User';
+import PeerDefault from './views/Peer';
 import BlockDefault from './views/Block';
 import WalletDefault from './views/Wallet';
 
@@ -25,7 +25,7 @@ const App = () => {
                 <Routes>
                     <Route path="/free/*" element={<MainLayout />}>
                         <Route path="" element={<Dashboard />} />
-                        <Route path="user" element={<UserDefault />} />
+                        <Route path="user" element={<PeerDefault />} />
                         <Route path="block" element={<BlockDefault />} />
                         <Route path="wallet" element={<WalletDefault />} />
                     </Route>

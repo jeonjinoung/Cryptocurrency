@@ -49,7 +49,7 @@ function nextBlock(bodyData) {
   const timestamp = parseInt(Date.now() / 1000)
   const tree = merkle('sha256').sync(bodyData)
   const merkleRoot = tree.root() || '0'.repeat(64)
-  const difficulty = Blocks[Blocks.length - 1].header.difficulty;
+  const difficulty = getDifficulty(getBlocks());
   // const nonce = 0
 
   const header = findBlock(version, index, previousHash, timestamp, merkleRoot, difficulty)

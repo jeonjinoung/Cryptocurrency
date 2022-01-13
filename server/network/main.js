@@ -13,9 +13,13 @@ function initHttpServer() {
   app.use(express.json());
 
   app.post("/api/addPeers", (req, res) => {
-    const data = req.body.data || [];
-    connectToPeers(data);
-    res.send(data);
+    console.log(11111);
+    console.log(req.body);
+    console.log(33333);
+    
+    // const data = req.body.data || [];
+    // connectToPeers(data);
+    // res.send(data);
   });
 
   app.get("/api/peers", (req, res) => {
@@ -36,7 +40,7 @@ function initHttpServer() {
 
   app.post("/api/mineBlock", (req, res) => {
     const { addBlock } = require("../utils/isValidBlock");
-    work();
+    // work();
     
     const data = req.body.data || [];
     const block = nextBlock(data);
