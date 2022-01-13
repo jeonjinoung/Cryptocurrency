@@ -1,9 +1,40 @@
 /* HTTP Server (사용자와 노드 간의 통신) */
 const express = require("express");
-const { getBlocks, getVersion, nextBlock, getLastBlock } = require("../blockchain/blocks");
+const {
+  getBlocks,
+  getVersion,
+  nextBlock,
+  getLastBlock,
+} = require("../blockchain/blocks");
 const { getPublicKeyFromWallet } = require("../wallet/wallet");
-const { connectToPeers, getSockets, initP2PServer, broadcast } = require("./networks");
-const { work } = require('../scripts/average-work');
+const {
+  connectToPeers,
+  getSockets,
+  initP2PServer,
+  broadcast,
+} = require("./networks");
+const { work } = require("../scripts/average-work");
+///////////////////////////////////////////////
+// const mysql = require("mysql");
+// const bodyParser = require("body-parser");
+// const cors = require("cors");
+
+// var connection = mysql.createConnection({
+//   host: "localhost",
+//   user: "root", //mysql의 id
+//   password: "1234", //mysql의 password
+//   database: "User", //사용할 데이터베이스
+// });
+// connection.connect();
+
+// app.use(bodyParser.urlencoded({ extended: false }));
+// app.use(bodyParser.json());
+// app.use(cors());
+
+// app.get("/", (req, res) => {
+//   res.send("혁이는 코딩 중!");
+// });
+///////////////////////////////////////////////
 
 const HTTP_PORT = process.env.HTTP_PORT || 4001;
 const P2P_PORT = process.env.P2P_PORT || 7001;
@@ -16,10 +47,17 @@ function initHttpServer() {
     console.log(11111);
     console.log(req.body);
     console.log(33333);
-    
+
     // const data = req.body.data || [];
     // connectToPeers(data);
-    // res.send(data);
+    res.send(data);
+  });
+
+  app.post("/api/addUsers", (req, res) => {
+    console.log(11111);
+    console.log(req.body);
+    console.log(33333);
+    res.send(data);
   });
 
   app.get("/api/peers", (req, res) => {
@@ -41,7 +79,7 @@ function initHttpServer() {
   app.post("/api/mineBlock", (req, res) => {
     const { addBlock } = require("../utils/isValidBlock");
     // work();
-    
+
     const data = req.body.data || [];
     const block = nextBlock(data);
     addBlock(block);
@@ -61,7 +99,7 @@ function initHttpServer() {
   app.get("/api/address", (req, res) => {
     const address = getPublicKeyFromWallet().toString();
     if (address != "") {
-      res.send({"address" : address});
+      res.send({ address: address });
     } else {
       res.send("empty address!");
     }
