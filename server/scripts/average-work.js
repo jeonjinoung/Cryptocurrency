@@ -1,24 +1,31 @@
 const { Blocks, nextBlock } = require('../blockchain/blocks');
 const { addBlock } = require('../utils/isValidBlock');
 
-console.log('first block : ', Blocks[Blocks.length-1]);
+// console.log('first block : ', Blocks[Blocks.length-1]);
 
-let newBlock, prevTimestamp, nextTimestamp, miningBlock, timeDiff, average;
-const times = [];
+function work() {
+  let newBlock, prevTimestamp, nextTimestamp, miningBlock, timeDiff, average;
+  const times = [];
 
-for (let i = 0; i < 100; i++) {
-  prevTimestamp = Blocks[Blocks.length-1].header.timestamp;
+  for (let i = 0; i < 100; i++) { 
+    prevTimestamp = Blocks[Blocks.length-1].header.timestamp;
 
-  newBlock = nextBlock([ 'initial' ]);
-  addBlock(newBlock);
-  miningBlock = Blocks[Blocks.length-1];
+    newBlock = nextBlock([ 'initial' ]);
+    addBlock(newBlock);
 
-  nextTimestamp = newBlock.header.timestamp;
+    miningBlock = Blocks[Blocks.length-1];
 
-  timeDiff = nextTimestamp - prevTimestamp;
-  times.push(timeDiff);
+    nextTimestamp = newBlock.header.timestamp;
 
-  average = times.reduce((total, num) => (total + num))/times.length;
+    timeDiff = nextTimestamp - prevTimestamp;
+    times.push(timeDiff);
 
-  console.log(`Time to mine block: ${timeDiff}ms. Difficulty: ${miningBlock.header.difficulty}. Average time: ${average}ms`);
+    average = times.reduce((total, num) => (total + num))/times.length;
+
+    console.log(`Time to mine block: ${timeDiff}ms. Difficulty: ${miningBlock.header.difficulty}. Average time: ${average}ms`);
+  }
+}
+
+module.exports = {
+  work
 }

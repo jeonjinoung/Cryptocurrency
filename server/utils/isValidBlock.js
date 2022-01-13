@@ -1,6 +1,7 @@
 const merkle = require("merkle");
 const { Block, BlockHeader } = require("../blockchain/blockclass");
-const { Blocks, isValidTimestamp, getLastBlock, getDifficulty, hashMatchesDifficulty } = require("../blockchain/blocks");
+const { Blocks, isValidTimestamp, getLastBlock, getDifficulty } = require("../blockchain/blocks");
+const { broadcast, responseLatestMsg } = require("../network/networks");
 const { createHash } = require("./hash");
 
 function isValidBlockStructure(block) {
@@ -36,7 +37,6 @@ function isValidNewBlock(newBlock, previousBlock) {
   return true;
 }
 
-/* 순환 에러 */
 function isValidChain(newBlocks) {
   if(JSON.stringify(newBlocks[0]) !== JSON.stringify(Blocks[0])) {
     return false;
@@ -53,17 +53,21 @@ function isValidChain(newBlocks) {
   return true;
 };
 
+function replaceChain(newBlocks) {
+  if (isValidChain(newBlocks)) {  
+    if ((newBlocks.length > Blocks.length) || (newBlocks.length === Blocks.length)) {
+      Blocks = newBlocks;
+      broadcast(responseLatestMsg());
+    }
+  } else {
+    console.log("받은 원장 오류");
+  }
+}
+
 function addBlock(newBlock) {
   if (isValidNewBlock(newBlock, getLastBlock())) {
-    const { version, index, previousHash, timestamp, merkleRoot, nonce } = newBlock.header;
-    const { body } = newBlock;
+    Blocks.push(newBlock);
 
-    const newDifficulty = getDifficulty(Blocks);
-    
-    const header = new BlockHeader(version, index, previousHash, timestamp, merkleRoot, newDifficulty, nonce);
-    const newDifficultyBlock = new Block(header, body);
-
-    Blocks.push(newDifficultyBlock);
     return true;
   }
   return false;
@@ -72,4 +76,5 @@ function addBlock(newBlock) {
 module.exports = {
   addBlock,
   isValidNewBlock,
+  replaceChain,
 };

@@ -59,10 +59,12 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 const BlocksCard = ({ isLoading }) => {
     const [Blocks, setBlocks] = useState([]);    
-
+    
     useEffect(() => {
-        Axios.get('/api/blocks')
-          .then(response => setBlocks(response.data));
+        setInterval(() => {
+            Axios.get('/api/blocks')
+              .then(response => setBlocks(response.data));
+        }, 1000)
     }, [])
 
     const theme = useTheme();
