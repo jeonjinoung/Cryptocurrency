@@ -1,9 +1,9 @@
 /* HTTP Server (사용자와 노드 간의 통신) */
 const express = require("express");
 const { getBlocks, getVersion, nextBlock, getLastBlock } = require("../blockchain/blocks");
-const { addBlock } = require("../utils/isValidBlock");
 const { getPublicKeyFromWallet } = require("../wallet/wallet");
 const { connectToPeers, getSockets, initP2PServer, broadcast } = require("./networks");
+const { work } = require("../scripts/average-work");
 
 const HTTP_PORT = process.env.HTTP_PORT || 4001;
 const P2P_PORT = process.env.P2P_PORT || 7001;
@@ -35,10 +35,12 @@ function initHttpServer() {
   });
 
   app.post("/api/mineBlock", (req, res) => {
+    const { addBlock } = require("../utils/isValidBlock");
+    // work();
+
     const data = req.body.data || [];
     const block = nextBlock(data);
     addBlock(block);
-    broadcast(block);
     res.send(block);
   });
 
@@ -54,7 +56,7 @@ function initHttpServer() {
   app.get("/api/address", (req, res) => {
     const address = getPublicKeyFromWallet().toString();
     if (address != "") {
-      res.send({"address" : address});
+      res.send({ address: address });
     } else {
       res.send("empty address!");
     }

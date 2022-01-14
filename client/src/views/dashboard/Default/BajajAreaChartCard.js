@@ -32,6 +32,7 @@ const BajajAreaChartCard = () => {
         ApexCharts.exec(`support-chart`, 'updateOptions', newSupportChart);
     }, [navType, orangeDark]);
 
+    console.log(chartData.series[0].data[0]);
     return (
         <Card sx={{ bgcolor: 'secondary.light' }}>
             <Grid container sx={{ p: 2, pb: 0, color: '#fff' }}>
