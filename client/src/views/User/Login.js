@@ -2,18 +2,23 @@ import { useState } from "react";
 import Axios from "axios";
 
 const Login = () => {
-  const [Email, setEmail] = useState("");
   const [PassWord, setPassWord] = useState("");
+  const [Email, setEmail] = useState("");
 
-  const users = {
-    Id: Email,
-    Pw: PassWord,
+  const id = {
+    pw: PassWord,
+    email: Email,
   };
 
-  const onClickLogin = (e) => {
+  console.log(id);
+  const onSubmitUser = (e) => {
     e.preventDefault();
-    console.log(Email, PassWord);
-    Axios.post("/api/login", users).then((response) => {
+    console.log(PassWord, Email);
+    Axios.post("/api/Login", id).then((response) => {
+      console.log(4444444444444444444444);
+      console.log(response.data);
+      console.log(3333333333333333333333333);
+      console.log(id);
       if (response.data) {
         alert("성공");
       } else {
@@ -22,40 +27,33 @@ const Login = () => {
     });
   };
 
-  const handleInputId = (e) => {
-    setEmail(e.target.value);
-  };
-  const handleInputPw = (e) => {
+  const onPWChange = (e) => {
     setPassWord(e.target.value);
+    console.log(PassWord);
+  };
+
+  const onEmailChange = (e) => {
+    setEmail(e.target.value);
+    console.log(Email);
   };
 
   return (
-    <div>
-      <h2>Login</h2>
-      <div>
-        <label htmlFor="input_id">ID : </label>
-        <input
-          type="text"
-          name="input_id"
-          value={Email}
-          onChange={handleInputId}
-        />
-      </div>
-      <div>
-        <label htmlFor="input_pw">PW : </label>
-        <input
-          type="password"
-          name="input_pw"
-          value={PassWord}
-          onChange={handleInputPw}
-        />
-      </div>
-      <div>
-        <button type="button" onClick={onClickLogin}>
-          Login
-        </button>
-      </div>
-    </div>
+    <>
+      <form onSubmit={onSubmitUser}>
+        <br />
+        <label>
+          비밀번호
+          <input type="text" onChange={onPWChange} />
+        </label>
+        <br />
+        <label>
+          이메일
+          <input type="text" onChange={onEmailChange} />
+        </label>
+        <br />
+        <button>로그인</button>
+      </form>
+    </>
   );
 };
 

@@ -20,10 +20,15 @@ const P2P_PORT = process.env.P2P_PORT || 7001;
 
 /////////////////////////////////////////////
 //db연동관련
-const app = express();
 const path = require("path");
-const { sequelize } = require("../models/index");
+const passport = require("passport");
 const User = require("../models/user");
+const { sequelize } = require("../models/index");
+
+////////////////////////////////////////////////////
+
+const app = express();
+///////////////////////////////////////////////
 
 sequelize
   .sync({ force: false })
@@ -33,7 +38,7 @@ sequelize
   .catch((err) => {
     console.error(err);
   });
-
+//////////////////////////////////////////////////////////
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
@@ -41,37 +46,49 @@ app.use(express.json());
 function initHttpServer() {
   /////////////////////////////////////////////
   app.post("/api/addPeers", (req, res) => {
-    console.log(11111);
     console.log(req.body);
-    console.log(33333);
     // const data = req.body.data || [];
     // connectToPeers(data);
     // res.send(data);
   });
 
-  //////////////////////////////////////////////
-  //DB 가져오기 실습
-
-  app.post("api/login", (req, res) => {
+  app.post("/api/Login", (req, res) => {
     console.log(777777777);
     console.log(req.body);
     console.log(00000000000000);
   });
 
-  app.post("/api/addUser", (req, res) => {
-    console.log(3333333333333333333);
+  app.post("/api/addUser", async (req, res) => {
+    const { email, pw, name } = req.body;
+    console.log(333333333333333333333);
     console.log(req.body);
-    console.log(3333333333333333333);
+    console.log(333333333333333333333);
+    try {
+      const exUser = await User.findOne({
+        where: {
+          email,
+        },
+      });
 
-    User.create({
-      name: req.body.name,
-      pw: req.body.pw,
-      age: req.body.age,
-      email: req.body.email,
-    });
+      console.log(000000000000000);
+      console.log(exUser);
+      console.log(000000000000000);
+      if (exUser) {
+        return res.json({ success: false });
+      }
+      await User.create({
+        name,
+        pw,
+        email,
+      });
+      return res.status(200).json({
+        success: true,
+      });
+    } catch (error) {
+      return res.json({ success: false, error });
+    }
   });
-  //작업공간
-  /////////////////////////////////////////////////////////
+
   app.get("/api/peers", (req, res) => {
     let sockInfo = [];
     getSockets().forEach((s) => {

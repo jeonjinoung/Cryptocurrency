@@ -19,6 +19,7 @@
     "passport-local": "^1.0.0",
     "random": "^3.0.6",
     "sequelize": "^6.13.0",
+    "sequelize-cli": "^6.3.0",
     "ws": "^8.4.0"
   },
   "name": "basic",

@@ -18,7 +18,8 @@ const AddUser = () => {
     e.preventDefault();
     console.log(Name, PassWord, Email, Age);
     Axios.post("/api/addUser", user).then((response) => {
-      if (response.data) {
+      console.log(response.data)
+      if (response.data.success) {
         alert("성공");
       } else {
         alert("실패");

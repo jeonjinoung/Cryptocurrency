@@ -9,17 +9,13 @@ module.exports = class User extends Sequelize.Model {
           allowNull: false,
           unique: true,
         },
-        age: {
-          type: Sequelize.INTEGER.UNSIGNED,
-          allowNull: false,
-        },
         created_at: {
           type: Sequelize.DATE,
           allowNull: false,
           defaultValue: Sequelize.NOW,
         },
         pw: {
-          type: Sequelize.INTEGER.UNSIGNED,
+          type: Sequelize.STRING(20),
           allowNull: false,
         },
         email: {
