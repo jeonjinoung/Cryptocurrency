@@ -30,8 +30,38 @@ function createGenesisBlock() {
   return new Block(header, body)
 }
 
-
 let Blocks = [createGenesisBlock()];
+
+function replaceChain(newBlocks) {
+  const { broadcast, responseLatestMsg } = require('../network/networks');
+
+  if (isValidChain(newBlocks)) {  
+    if ((newBlocks.length > Blocks.length) || (newBlocks.length === Blocks.length)) {
+      Blocks = newBlocks;
+      broadcast(responseLatestMsg());
+    }
+  } else {
+    console.log("받은 원장 오류");
+  }
+}
+
+function isValidChain(newBlocks) {
+  const { isValidNewBlock } = require("../utils/isValidBlock");
+
+  if(JSON.stringify(newBlocks[0]) !== JSON.stringify(Blocks[0])) {
+    return false;
+  };
+
+  let tempBlocks = [newBlocks[0]];
+  for (let i = 1; i < newBlocks.length; i++) {   
+    if (isValidNewBlock(newBlocks[i], tempBlocks[i - 1])) {
+      tempBlocks.push(newBlocks[i]);
+    } else {
+      return false;
+    }
+  };
+  return true;
+};
 
 function getBlocks() {
   return Blocks;
@@ -50,7 +80,6 @@ function nextBlock(bodyData) {
   const tree = merkle('sha256').sync(bodyData)
   const merkleRoot = tree.root() || '0'.repeat(64)
   const difficulty = getDifficulty(getBlocks());
-  // const nonce = 0
 
   const header = findBlock(version, index, previousHash, timestamp, merkleRoot, difficulty)
   return new Block(header, bodyData)
@@ -108,21 +137,6 @@ function getCurrentTimestamp() {
   return Math.round(new Date().getTime() / 1000);
 }
 
-// function isValidTimestamp(newBlock, prevBlock) {
-//   /* 최초의 블록은 검색예외 보존 */
-//   if (prevBlock.header.timestamp === 1231006505) {
-//     return true;
-//   }
-
-//   if (newBlock.header.timestamp - prevBlock.header.timestamp > 60) {
-//     return false;
-//   }
-
-//   if (newBlock.header.timestamp - getCurrentTimestamp() > 60) {
-//     return false;
-//   }
-//   return true;
-// }
 function isValidTimestamp(newBlock, previousBlock) {
   return (
     previousBlock.header.timestamp - 60 < newBlock.header.timestamp &&
@@ -139,4 +153,5 @@ module.exports = {
   getDifficulty,
   isValidTimestamp,
   hashMatchesDifficulty,
+  replaceChain,
 };
