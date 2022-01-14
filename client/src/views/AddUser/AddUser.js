@@ -2,20 +2,20 @@ import { useState } from "react";
 import Axios from "axios";
 
 const AddUser = () => {
-  const [User, setUser] = useState("");
+  const [Name, setName] = useState("");
   const [PassWord, setPassWord] = useState("");
   const [Email, setEmail] = useState("");
 
   const test = {
-    id: User,
+    name: Name,
     pw: PassWord,
-    email: Email,
+    Email: Email,
   };
 
   const onSubmitUser = (e) => {
     e.preventDefault();
-    console.log(User, PassWord, Email);
-    Axios.post("/api/addUsers", test).then((response) => {
+    console.log(Name, PassWord, Email);
+    Axios.post("/api/addUser", test).then((response) => {
       if (response.data) {
         alert("성공");
       } else {
@@ -25,19 +25,19 @@ const AddUser = () => {
   };
 
   const onUserChange = (e) => {
-    console.log(e.target.value);
-    setUser(e.target.value);
-    console.log(User);
+    // console.log(e.target.value);
+    setName(e.target.value);
+    console.log(Name);
   };
 
-  const onPwChange = (e) => {
-    console.log(e.target.value);
+  const onPWChange = (e) => {
+    // console.log(e.target.value);
     setPassWord(e.target.value);
     console.log(PassWord);
   };
 
   const onEmailChange = (e) => {
-    console.log(e.target.value);
+    // console.log(e.target.value);
     setEmail(e.target.value);
     console.log(Email);
   };
@@ -45,18 +45,20 @@ const AddUser = () => {
   return (
     <>
       <form onSubmit={onSubmitUser}>
-        <legend>
+        <label>
           이름
           <input type="text" onChange={onUserChange} />
-        </legend>
-        <legend>
+        </label>
+        <br />
+        <label>
           비밀번호
-          <input type="text" onChange={onPwChange} />
-        </legend>
-        <legend>
+          <input type="text" onChange={onPWChange} />
+        </label>
+        <label>
           이메일
           <input type="text" onChange={onEmailChange} />
-        </legend>
+        </label>
+        <br />
         <button>회원가입</button>
       </form>
     </>

@@ -14,52 +14,74 @@ const {
   broadcast,
 } = require("./networks");
 const { work } = require("../scripts/average-work");
-///////////////////////////////////////////////
-// const mysql = require("mysql");
-// const bodyParser = require("body-parser");
-// const cors = require("cors");
-
-// var connection = mysql.createConnection({
-//   host: "localhost",
-//   user: "root", //mysql의 id
-//   password: "1234", //mysql의 password
-//   database: "User", //사용할 데이터베이스
-// });
-// connection.connect();
-
-// app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(bodyParser.json());
-// app.use(cors());
-
-// app.get("/", (req, res) => {
-//   res.send("혁이는 코딩 중!");
-// });
-///////////////////////////////////////////////
 
 const HTTP_PORT = process.env.HTTP_PORT || 4001;
 const P2P_PORT = process.env.P2P_PORT || 7001;
 
-function initHttpServer() {
-  const app = express();
-  app.use(express.json());
+/////////////////////////////////////////////
+//db연동관련
+const app = express();
+const bodyParser = require("body-parser");
+const mysql = require("mysql");
+const path = require("path");
+const morgan = require("morgan");
+const { sequelize } = require("../models/index");
 
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log("데이터베이스 연결성공");
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.json);
+app.use(express.urlencoded({ extended: false }));
+
+app.use((req, res, next) => {
+  const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
+  error.status = 404;
+  next(error);
+});
+
+app.use((err, req, res, next) => {
+  res.locals.message = err.message;
+  res.locals.error = process.env.NODE_ENV !== "production" ? err : {};
+  res.status(err.status || 500);
+  res.render("error");
+});
+
+//////////////////////////////////////////////
+
+function initHttpServer() {
+  /////////////////////////////////////////////
   app.post("/api/addPeers", (req, res) => {
     console.log(11111);
     console.log(req.body);
     console.log(33333);
-
     // const data = req.body.data || [];
     // connectToPeers(data);
-    res.send(data);
+    // res.send(data);
   });
 
-  app.post("/api/addUsers", (req, res) => {
-    console.log(11111);
+  //////////////////////////////////////////////
+  //DB 가져오기 실습
+
+  app.post("api/login", (req, res) => {
+    console.log(777777777);
     console.log(req.body);
-    console.log(33333);
-    res.send(data);
+    console.log(00000000000000);
   });
 
+  app.post("/api/addUser", (req, res) => {
+    console.log(44444444);
+    console.log(req.body);
+    console.log(44444444);
+  });
+  //작업공간
+  /////////////////////////////////////////////////////////
   app.get("/api/peers", (req, res) => {
     let sockInfo = [];
     getSockets().forEach((s) => {
