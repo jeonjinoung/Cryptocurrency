@@ -1,9 +1,8 @@
 /* P2P Server (노드와 노드 간의 통신) */
 const WebSocket = require("ws");
-const { getLastBlock, getBlocks } = require("../blockchain/blocks");
+const { getLastBlock, getBlocks, replaceChain } = require("../blockchain/blocks");
 const { createHash } = require('../utils/hash');
 
-//wsinit
 function initP2PServer(test_port) {
   const server = new WebSocket.Server({ port: test_port });
   server.on("connection", (ws) => {
@@ -60,12 +59,15 @@ const MessageType = {
 function initMessageHandler(ws) {
   ws.on("message", (data) => {
     const message = JSON.parse(data);
+
+    console.log(message.type, message.type, message.type, message.type, message.type);
+    console.log(message);
+    console.log(message.type, message.type, message.type, message.type, message.type);
     
     if (message === null) {
       return;
     }
 
-    console.log(message.type);
     switch (message.type) {
       case MessageType.QUERY_LATEST:
         write(ws, responseLatestMsg());
@@ -88,6 +90,9 @@ function responseLatestMsg() {
 }
 
 function responseAllChainMsg() {
+  console.log("블록 보내기");
+  console.log(getBlocks());
+  console.log("블록 보내기");
   return {
     type: MessageType.RESPONSE_BLOCKCHAIN,
     data: JSON.stringify(getBlocks()),
@@ -95,8 +100,11 @@ function responseAllChainMsg() {
 }
 
 function handleBlockChainResponse(message) {
-  const { addBlock, replaceChain } = require("../utils/isValidBlock");
+  const { addBlock } = require("../utils/isValidBlock");
 
+  console.log("받은 데이터");
+  console.log(JSON.parse(message.data));
+  console.log("받은 데이터");
   const receiveBlocks = JSON.parse(message.data);
   const latestReceiveBlock = receiveBlocks[receiveBlocks.length - 1];
   const latestMyBlock = getLastBlock();

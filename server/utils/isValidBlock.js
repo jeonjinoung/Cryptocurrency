@@ -1,5 +1,4 @@
 const merkle = require("merkle");
-const { Block, BlockHeader } = require("../blockchain/blockclass");
 const { Blocks, isValidTimestamp, getLastBlock, getDifficulty } = require("../blockchain/blocks");
 const { broadcast, responseLatestMsg } = require("../network/networks");
 const { createHash } = require("./hash");
@@ -37,33 +36,6 @@ function isValidNewBlock(newBlock, previousBlock) {
   return true;
 }
 
-function isValidChain(newBlocks) {
-  if(JSON.stringify(newBlocks[0]) !== JSON.stringify(Blocks[0])) {
-    return false;
-  };
-
-  var tempBlocks = [newBlocks[0]];
-  for (var i = 0; i < newBlocks.length; i++) {    
-    if (isValidNewBlock(newBlocks[i], tempBlocks[i - 1])) {
-      tempBlocks.push(newBlocks[i]);
-    } else {
-      return false;
-    }
-  };
-  return true;
-};
-
-function replaceChain(newBlocks) {
-  if (isValidChain(newBlocks)) {  
-    if ((newBlocks.length > Blocks.length) || (newBlocks.length === Blocks.length)) {
-      Blocks = newBlocks;
-      broadcast(responseLatestMsg());
-    }
-  } else {
-    console.log("받은 원장 오류");
-  }
-}
-
 function addBlock(newBlock) {
   if (isValidNewBlock(newBlock, getLastBlock())) {
     Blocks.push(newBlock);
@@ -76,5 +48,4 @@ function addBlock(newBlock) {
 module.exports = {
   addBlock,
   isValidNewBlock,
-  replaceChain,
 };
