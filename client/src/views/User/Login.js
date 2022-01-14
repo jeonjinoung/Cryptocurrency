@@ -2,18 +2,18 @@ import { useState } from "react";
 import Axios from "axios";
 
 const Login = () => {
-  const [inputId, setInputId] = useState("");
-  const [inputPw, setInputPw] = useState("");
+  const [Email, setEmail] = useState("");
+  const [PassWord, setPassWord] = useState("");
 
-  const test = {
-    Id: inputId,
-    Pw: inputPw,
+  const users = {
+    Id: Email,
+    Pw: PassWord,
   };
 
   const onClickLogin = (e) => {
     e.preventDefault();
-    console.log(inputId, inputPw);
-    Axios.post("/api/login", test).then((response) => {
+    console.log(Email, PassWord);
+    Axios.post("/api/login", users).then((response) => {
       if (response.data) {
         alert("성공");
       } else {
@@ -23,10 +23,10 @@ const Login = () => {
   };
 
   const handleInputId = (e) => {
-    setInputId(e.target.value);
+    setEmail(e.target.value);
   };
   const handleInputPw = (e) => {
-    setInputPw(e.target.value);
+    setPassWord(e.target.value);
   };
 
   return (
@@ -37,7 +37,7 @@ const Login = () => {
         <input
           type="text"
           name="input_id"
-          value={inputId}
+          value={Email}
           onChange={handleInputId}
         />
       </div>
@@ -46,7 +46,7 @@ const Login = () => {
         <input
           type="password"
           name="input_pw"
-          value={inputPw}
+          value={PassWord}
           onChange={handleInputPw}
         />
       </div>

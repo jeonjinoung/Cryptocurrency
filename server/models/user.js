@@ -13,14 +13,18 @@ module.exports = class User extends Sequelize.Model {
           type: Sequelize.INTEGER.UNSIGNED,
           allowNull: false,
         },
-        married: {
-          type: Sequelize.BOOLEAN,
-          allowNull: false,
-        },
         created_at: {
           type: Sequelize.DATE,
           allowNull: false,
           defaultValue: Sequelize.NOW,
+        },
+        pw: {
+          type: Sequelize.INTEGER.UNSIGNED,
+          allowNull: false,
+        },
+        email: {
+          type: Sequelize.STRING(40),
+          allowNull: false,
         },
       },
       {

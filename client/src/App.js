@@ -8,7 +8,7 @@ import Dashboard from "./views/dashboard/Default";
 import PeerDefault from "./views/Peer";
 import BlockDefault from "./views/Block";
 import WalletDefault from "./views/Wallet";
-import RegisterDefault from "./views/AddUser/index";
+import UserDefault from "./views/User/index";
 
 // defaultTheme
 import themes from "./themes";
@@ -23,7 +23,7 @@ const App = () => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={themes(customization)}>
         <Routes>
-          <Route path="" element={<RegisterDefault />} />
+          <Route path="" element={<UserDefault />} />
           <Route path="/free/*" element={<MainLayout />}>
             <Route path="" element={<Dashboard />} />
             <Route path="user" element={<PeerDefault />} />

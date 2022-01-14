@@ -1,6 +1,6 @@
 import AddUser from "./AddUser";
 import Login from "./Login";
-const RegisterDefault = () => {
+const UserDefault = () => {
   return (
     <>
       <AddUser />
@@ -9,4 +9,4 @@ const RegisterDefault = () => {
   );
 };
 
-export default RegisterDefault;
+export default UserDefault;

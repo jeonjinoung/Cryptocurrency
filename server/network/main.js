@@ -21,11 +21,9 @@ const P2P_PORT = process.env.P2P_PORT || 7001;
 /////////////////////////////////////////////
 //db연동관련
 const app = express();
-const bodyParser = require("body-parser");
-const mysql = require("mysql");
 const path = require("path");
-const morgan = require("morgan");
 const { sequelize } = require("../models/index");
+const User = require("../models/user");
 
 sequelize
   .sync({ force: false })
@@ -37,23 +35,8 @@ sequelize
   });
 
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.json);
 app.use(express.urlencoded({ extended: false }));
-
-app.use((req, res, next) => {
-  const error = new Error(`${req.method} ${req.url} 라우터가 없습니다.`);
-  error.status = 404;
-  next(error);
-});
-
-app.use((err, req, res, next) => {
-  res.locals.message = err.message;
-  res.locals.error = process.env.NODE_ENV !== "production" ? err : {};
-  res.status(err.status || 500);
-  res.render("error");
-});
-
-//////////////////////////////////////////////
+app.use(express.json());
 
 function initHttpServer() {
   /////////////////////////////////////////////
@@ -76,9 +59,16 @@ function initHttpServer() {
   });
 
   app.post("/api/addUser", (req, res) => {
-    console.log(44444444);
+    console.log(3333333333333333333);
     console.log(req.body);
-    console.log(44444444);
+    console.log(3333333333333333333);
+
+    User.create({
+      name: req.body.name,
+      pw: req.body.pw,
+      age: req.body.age,
+      email: req.body.email,
+    });
   });
   //작업공간
   /////////////////////////////////////////////////////////
