@@ -55,18 +55,6 @@ function nextBlock(bodyData) {
   return new Block(header, bodyData);
 }
 
-function replaceChain(newBlocks) {
-  if (isValidChain(newBlocks)) {
-    // 순환 에러 해결 중
-    if (newBlocks.length > Blocks.length || newBlocks.length === Blocks.length) {
-      Blocks = newBlocks;
-      broadcast(responseLatestMsg());
-    }
-  } else {
-    console.log("받은 원장 오류");
-  }
-}
-
 function hashMatchesDifficulty(hash, difficulty) {
   const hashBinary = hexToBinary(hash).substring(0, difficulty);
   return hashBinary.startsWith("0".repeat(difficulty)); // 시작부분이 같으면 true
@@ -105,9 +93,6 @@ function getAdjustDifficulty(lastBlock, blocks) {
   const elapsedTime = lastBlock.header.timestamp - prevAdjustmentBlock.header.timestamp;
   const expectedTime = BLOCK_GENERATION_INTERVAL * DIFFICULTY_ADJUSTMENT_INTERVAL;
 
-  // const BLOCK_GENERATION_INTERVAL = 2  // 초단위
-  // const DIFFICULTY_ADJUSTMENT_INTERVAL = 3 // 블록이 생성되는 간격(난이도 간격)
-
   if (expectedTime / 2 > elapsedTime) {
     return prevAdjustmentBlock.header.difficulty + 1;
   } else if (expectedTime * 2 < elapsedTime) {
@@ -143,7 +128,6 @@ module.exports = {
   nextBlock,
   getBlocks,
   getVersion,
-  replaceChain,
   getDifficulty,
   isValidTimestamp,
   hashMatchesDifficulty,
