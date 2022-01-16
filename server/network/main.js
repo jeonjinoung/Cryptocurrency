@@ -21,14 +21,13 @@ const P2P_PORT = process.env.P2P_PORT || 7001;
 /////////////////////////////////////////////
 //db연동관련
 const path = require("path");
-const passport = require("passport");
 const User = require("../models/user");
 const { sequelize } = require("../models/index");
-
-////////////////////////////////////////////////////
-
+const passport = require("passport");
+const passportConfig = require("../passport");
 const app = express();
-///////////////////////////////////////////////
+passportConfig();
+const session = require("express-session");
 
 sequelize
   .sync({ force: false })
@@ -42,37 +41,29 @@ sequelize
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
+app.use(passport.initialize());
+// app.use(passport.session());
 
 function initHttpServer() {
   /////////////////////////////////////////////
   app.post("/api/addPeers", (req, res) => {
     console.log(req.body);
-    // const data = req.body.data || [];
-    // connectToPeers(data);
-    // res.send(data);
-  });
-
-  app.post("/api/Login", (req, res) => {
-    console.log(777777777);
-    console.log(req.body);
-    console.log(00000000000000);
+    const data = req.body.data || [];
+    connectToPeers(data);
+    res.send(data);
   });
 
   app.post("/api/addUser", async (req, res) => {
     const { email, pw, name } = req.body;
-    console.log(333333333333333333333);
+    console.log(777777777777777);
     console.log(req.body);
-    console.log(333333333333333333333);
+    console.log(8888888888888);
     try {
       const exUser = await User.findOne({
         where: {
           email,
         },
       });
-
-      console.log(000000000000000);
-      console.log(exUser);
-      console.log(000000000000000);
       if (exUser) {
         return res.json({ success: false });
       }
@@ -87,6 +78,30 @@ function initHttpServer() {
     } catch (error) {
       return res.json({ success: false, error });
     }
+  });
+
+  app.post("/api/Login", async (req, res) => {
+    const { email, pw } = req.body;
+    console.log(66666666666);
+    console.log(req.body);
+    console.log(666666666666);
+    ///////////////////////////////////////////////
+    passport.authenticate("local", (Error, user, info) => {
+      if (Error) {
+        console.error(Error);
+        return next(Error);
+      }
+      if (!user) {
+        return res.redirect(`/api/?LoginError=${info.message}`);
+      }
+      return req.login(user, (loginError) => {
+        if (loginError) {
+          console.error(loginError);
+          return next(loginError);
+        }
+        return res.redirect("/");
+      });
+    })(req, res, next);
   });
 
   app.get("/api/peers", (req, res) => {
@@ -108,7 +123,6 @@ function initHttpServer() {
   app.post("/api/mineBlock", (req, res) => {
     const { addBlock } = require("../utils/isValidBlock");
     // work();
-
     const data = req.body.data || [];
     const block = nextBlock(data);
     addBlock(block);
@@ -169,4 +183,23 @@ curl http://localhost:3001/stop
 
 소켓을 만들고 모듈을 사용하려면
 npm i ws
+
+ app.post("/api/Login", (req, res, next) => {
+    passport.authenticate("local", (Error, user, info) => {
+      if (Error) {
+        console.error(Error);
+        return next(Error);
+      }
+      if (!user) {
+        return res.redirect(`/api/?LoginError=${info.message}`);
+      }
+      return req.login(user, (loginError) => {
+        if (loginError) {
+          console.error(loginError);
+          return next(loginError);
+        }
+        return res.redirect("/");
+      });
+    })(req, res, next);
+  });
 */

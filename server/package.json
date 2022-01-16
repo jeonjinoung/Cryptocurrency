@@ -8,6 +8,7 @@
     "elliptic": "^6.5.4",
     "eslint-config-airbnb": "^19.0.4",
     "express": "^4.17.2",
+    "express-session": "^1.17.2",
     "fs": "^0.0.1-security",
     "hex-to-binary": "^1.0.1",
     "merkle": "^0.6.0",

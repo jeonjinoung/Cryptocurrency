@@ -5,20 +5,20 @@ const Login = () => {
   const [PassWord, setPassWord] = useState("");
   const [Email, setEmail] = useState("");
 
-  const id = {
+  const user = {
     pw: PassWord,
     email: Email,
   };
 
-  console.log(id);
+  console.log(user);
   const onSubmitUser = (e) => {
     e.preventDefault();
     console.log(PassWord, Email);
-    Axios.post("/api/Login", id).then((response) => {
+    Axios.post("/api/Login", user).then((response) => {
       console.log(4444444444444444444444);
       console.log(response.data);
       console.log(3333333333333333333333333);
-      console.log(id);
+      console.log(user);
       if (response.data) {
         alert("성공");
       } else {
