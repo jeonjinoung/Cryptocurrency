@@ -10,7 +10,6 @@ const Login = () => {
     email: Email,
   };
 
-  console.log(user);
   const onSubmitUser = (e) => {
     e.preventDefault();
     console.log(PassWord, Email);
@@ -18,7 +17,6 @@ const Login = () => {
       console.log(4444444444444444444444);
       console.log(response.data);
       console.log(3333333333333333333333333);
-      console.log(user);
       if (response.data) {
         alert("성공");
       } else {

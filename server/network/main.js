@@ -26,6 +26,7 @@ const passportConfig = require("../passport");
 const app = express();
 passportConfig();
 const session = require("express-session");
+const bcrypt = require('bcrypt');
 
 sequelize
   .sync({ force: false })
@@ -60,9 +61,10 @@ function initHttpServer() {
       if (exUser) {
         return res.json({ success: false });
       }
+      const hash = await bcrypt.hash(pw, 12);
       await User.create({
         name,
-        pw,
+        pw: hash,
         email,
       });
       return res.status(200).json({
@@ -73,18 +75,10 @@ function initHttpServer() {
     }
   });
 
-  app.post("/api/Login", async (req, res) => {
-    const { email } = req.body;
-
-    const Login = await User.findOne({
-      where: {
-        email
-      }
-    })
-    
+  app.post("/api/Login", async (req, res) => {    
     passport.authenticate("local", (err, user, info) => {
       if (err) {
-        res.status(401).json({ loginSuccess: false });
+        return res.status(401).json({ loginSuccess: false });
       }
       if (info) {
         return res.status(401).json({ loginSuccess: false, message: info });
@@ -96,12 +90,12 @@ function initHttpServer() {
         const UserInfo = await User.findOne({
           where: { id: user.id },
           attributes: {
-            exclude: ['password']
+            exclude: ['pw']
           }
         })
         return res.status(200).json({ UserInfo , loginSuccess : true });
       });
-    })(req, res, next);
+    })(req, res);
   });
 
   app.get("/api/peers", (req, res) => {
