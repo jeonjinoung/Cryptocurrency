@@ -1,7 +1,10 @@
-const Dashboard = () => {
+import AddUser from "./AddUser";
+import Login from "./Login";
+const UserDefault = () => {
   return (
     <>
-      <p>안녕하세요</p>
+      <AddUser />
+      <Login />
     </>
   );
 };
