@@ -1,20 +1,101 @@
 /* HTTP Server (사용자와 노드 간의 통신) */
 const express = require("express");
-const { getBlocks, getVersion, nextBlock, getLastBlock } = require("../blockchain/blocks");
-const { addBlock } = require("../utils/isValidBlock");
-const { connectToPeers, getSockets, initP2PServer, broadcast } = require("./networks");
+const {
+  getBlocks,
+  getVersion,
+  nextBlock,
+  getLastBlock,
+} = require("../blockchain/blocks");
+const { getPublicKeyFromWallet } = require("../wallet/wallet");
+const {
+  connectToPeers,
+  getSockets,
+  initP2PServer,
+  broadcast,
+} = require("./networks");
+const { work } = require("../scripts/average-work");
 
 const HTTP_PORT = process.env.HTTP_PORT || 4001;
 const P2P_PORT = process.env.P2P_PORT || 7001;
 
-function initHttpServer() {
-  const app = express();
-  app.use(express.json());
+const path = require("path");
+const User = require("../models/user");
+const { sequelize } = require("../models/index");
+const passport = require("passport");
+const passportConfig = require("../passport");
+const app = express();
+passportConfig();
+const session = require("express-session");
+const bcrypt = require('bcrypt');
 
+sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log("데이터베이스 연결성공");
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+
+app.use(express.static(path.join(__dirname, "public")));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+app.use(passport.initialize());
+
+function initHttpServer() {
   app.post("/api/addPeers", (req, res) => {
+    console.log(req.body);
     const data = req.body.data || [];
     connectToPeers(data);
     res.send(data);
+  });
+
+  app.post("/api/addUser", async (req, res) => {
+    const { email, pw, name } = req.body;
+    try {
+      const exUser = await User.findOne({
+        where: {
+          email,
+        },
+      });
+      if (exUser) {
+        return res.json({ success: false });
+      }
+      const hash = await bcrypt.hash(pw, 12);
+      await User.create({
+        name,
+        pw: hash,
+        email,
+      });
+      return res.status(200).json({
+        success: true,
+      });
+    } catch (error) {
+      return res.json({ success: false, error });
+    }
+  });
+
+  app.post("/api/Login", async (req, res) => {    
+    passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        return res.status(401).json({ loginSuccess: false });
+      }
+      if (info) {
+        return res.status(401).json({ loginSuccess: false, message: info });
+      }
+      return req.login(user, async (loginError) => {
+        if (loginError) {
+          return res.status(400).json({ loginSuccess: false });
+        }
+        const UserInfo = await User.findOne({
+          where: { id: user.id },
+          attributes: {
+            exclude: ['pw']
+          }
+        })
+        return res.status(200).json({ UserInfo , loginSuccess : true });
+      });
+    })(req, res);
   });
 
   app.get("/api/peers", (req, res) => {
@@ -34,10 +115,12 @@ function initHttpServer() {
   });
 
   app.post("/api/mineBlock", (req, res) => {
+    const { addBlock } = require("../utils/isValidBlock");
+    // work();
+
     const data = req.body.data || [];
     const block = nextBlock(data);
     addBlock(block);
-    broadcast(block);
     res.send(block);
   });
 
@@ -48,6 +131,15 @@ function initHttpServer() {
   app.post("/api/stop", (req, res) => {
     res.send({ msg: "Stop Server!" });
     process.exit();
+  });
+
+  app.get("/api/address", (req, res) => {
+    const address = getPublicKeyFromWallet().toString();
+    if (address != "") {
+      res.send({ address: address });
+    } else {
+      res.send("empty address!");
+    }
   });
 
   app.listen(HTTP_PORT, () => {
@@ -85,4 +177,23 @@ curl http://localhost:3001/stop
 
 소켓을 만들고 모듈을 사용하려면
 npm i ws
+
+ app.post("/api/Login", (req, res, next) => {
+    passport.authenticate("local", (Error, user, info) => {
+      if (Error) {
+        console.error(Error);
+        return next(Error);
+      }
+      if (!user) {
+        return res.redirect(`/api/?LoginError=${info.message}`);
+      }
+      return req.login(user, (loginError) => {
+        if (loginError) {
+          console.error(loginError);
+          return next(loginError);
+        }
+        return res.redirect("/");
+      });
+    })(req, res, next);
+  });
 */

@@ -1,9 +1,12 @@
+import AddUser from "./AddUser";
+import Login from "./Login";
 const UserDefault = () => {
-    return (
-      <>
-        <p>UserDefault</p>
-      </>
-    );
+  return (
+    <>
+      <AddUser />
+      <Login />
+    </>
+  );
 };
 
 export default UserDefault;

@@ -1,6 +1,6 @@
 const merkle = require("merkle");
-const { Block, BlockHeader } = require("../blockchain/blockclass");
-const { Blocks, isValidTimestamp, getLastBlock, getDifficulty, hashMatchesDifficulty } = require("../blockchain/blocks");
+const { Blocks, isValidTimestamp, getLastBlock, getDifficulty } = require("../blockchain/blocks");
+const { broadcast, responseLatestMsg } = require("../network/networks");
 const { createHash } = require("./hash");
 
 function isValidBlockStructure(block) {
@@ -31,43 +31,14 @@ function isValidNewBlock(newBlock, previousBlock) {
   } else if (!isValidTimestamp(newBlock, previousBlock)) {
     console.log("Invalid Timestamp");
     return false;
-  } else if (!hashMatchesDifficulty(createHash(newBlock), newBlock.header.difficulty)) {
-    console.log("Invalid hash");
-    return false;
-  }
+  } 
   
   return true;
 }
 
-/* 순환 에러 */
-function isValidChain(newBlocks) {
-  if(JSON.stringify(newBlocks[0]) !== JSON.stringify(Blocks[0])) {
-    return false;
-  };
-
-  var tempBlocks = [newBlocks[0]];
-  for (var i = 0; i < newBlocks.length; i++) {    
-    if (isValidNewBlock(newBlocks[i], tempBlocks[i - 1])) {
-      tempBlocks.push(newBlocks[i]);
-    } else {
-      return false;
-    }
-  };
-  return true;
-};
-
 function addBlock(newBlock) {
   if (isValidNewBlock(newBlock, getLastBlock())) {
-    const { version, index, previousHash, timestamp, merkleRoot, nonce } = newBlock.header;
-    const { body } = newBlock;
-
-    const newDifficulty = getDifficulty(Blocks);
-    console.log("난이도", newDifficulty);
-    
-    const header = new BlockHeader(version, index, previousHash, timestamp, merkleRoot, newDifficulty, nonce)
-    const newDifficultyBlock = new Block(header, body)
-
-    Blocks.push(newDifficultyBlock);
+    Blocks.push(newBlock);
 
     return true;
   }
