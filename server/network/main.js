@@ -126,7 +126,6 @@ function initHttpServer() {
     const data = req.body.data || [];
     const block = nextBlock(data);
     addBlock(block);
-    // broadcast(block);
     res.send(block);
   });
 
