@@ -24,10 +24,7 @@ const path = require("path");
 const User = require("../models/user");
 const { sequelize } = require("../models/index");
 const passport = require("passport");
-const passportConfig = require("../passport");
 const app = express();
-passportConfig();
-const session = require("express-session");
 
 sequelize
   .sync({ force: false })
@@ -41,8 +38,6 @@ sequelize
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(passport.initialize());
-// app.use(passport.session());
 
 function initHttpServer() {
   /////////////////////////////////////////////
