@@ -1,9 +1,11 @@
 import BlocksCard from "./BlocksCard";
+import AddBlockCard from "./AddBlockCard";
 
 const BlockDefault = () => {
   return (
     <>
-      <BlocksCard />    
+      <BlocksCard />
+      <AddBlockCard />
     </>
   );
 };

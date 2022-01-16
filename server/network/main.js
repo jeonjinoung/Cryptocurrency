@@ -26,7 +26,7 @@ const passportConfig = require("../passport");
 const app = express();
 passportConfig();
 const session = require("express-session");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 sequelize
   .sync({ force: false })
@@ -75,7 +75,7 @@ function initHttpServer() {
     }
   });
 
-  app.post("/api/Login", async (req, res) => {    
+  app.post("/api/Login", async (req, res) => {
     passport.authenticate("local", (err, user, info) => {
       if (err) {
         return res.status(401).json({ loginSuccess: false });
@@ -90,10 +90,10 @@ function initHttpServer() {
         const UserInfo = await User.findOne({
           where: { id: user.id },
           attributes: {
-            exclude: ['pw']
-          }
-        })
-        return res.status(200).json({ UserInfo , loginSuccess : true });
+            exclude: ["pw"],
+          },
+        });
+        return res.status(200).json({ UserInfo, loginSuccess: true });
       });
     })(req, res);
   });
@@ -115,6 +115,9 @@ function initHttpServer() {
   });
 
   app.post("/api/mineBlock", (req, res) => {
+    console.log(33333333333333333333);
+    console.log(req.body);
+    console.log(33333333333333333333);
     const { addBlock } = require("../utils/isValidBlock");
     // work();
 
