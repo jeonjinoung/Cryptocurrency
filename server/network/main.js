@@ -18,8 +18,6 @@ const { work } = require("../scripts/average-work");
 const HTTP_PORT = process.env.HTTP_PORT || 4001;
 const P2P_PORT = process.env.P2P_PORT || 7001;
 
-/////////////////////////////////////////////
-//db연동관련
 const path = require("path");
 const User = require("../models/user");
 const { sequelize } = require("../models/index");
@@ -37,15 +35,13 @@ sequelize
   .catch((err) => {
     console.error(err);
   });
-//////////////////////////////////////////////////////////
+
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(passport.initialize());
-// app.use(passport.session());
 
 function initHttpServer() {
-  /////////////////////////////////////////////
   app.post("/api/addPeers", (req, res) => {
     console.log(req.body);
     const data = req.body.data || [];
@@ -55,9 +51,6 @@ function initHttpServer() {
 
   app.post("/api/addUser", async (req, res) => {
     const { email, pw, name } = req.body;
-    console.log(777777777777777);
-    console.log(req.body);
-    console.log(8888888888888);
     try {
       const exUser = await User.findOne({
         where: {
@@ -81,25 +74,32 @@ function initHttpServer() {
   });
 
   app.post("/api/Login", async (req, res) => {
-    const { email, pw } = req.body;
-    console.log(66666666666);
-    console.log(req.body);
-    console.log(666666666666);
-    ///////////////////////////////////////////////
-    passport.authenticate("local", (Error, user, info) => {
-      if (Error) {
-        console.error(Error);
-        return next(Error);
+    const { email } = req.body;
+
+    const Login = await User.findOne({
+      where: {
+        email
       }
-      if (!user) {
-        return res.redirect(`/api/?LoginError=${info.message}`);
+    })
+    
+    passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        res.status(401).json({ loginSuccess: false });
       }
-      return req.login(user, (loginError) => {
+      if (info) {
+        return res.status(401).json({ loginSuccess: false, message: info });
+      }
+      return req.login(user, async (loginError) => {
         if (loginError) {
-          console.error(loginError);
-          return next(loginError);
+          return res.status(400).json({ loginSuccess: false });
         }
-        return res.redirect("/");
+        const UserInfo = await User.findOne({
+          where: { id: user.id },
+          attributes: {
+            exclude: ['password']
+          }
+        })
+        return res.status(200).json({ UserInfo , loginSuccess : true });
       });
     })(req, res, next);
   });
@@ -123,6 +123,7 @@ function initHttpServer() {
   app.post("/api/mineBlock", (req, res) => {
     const { addBlock } = require("../utils/isValidBlock");
     // work();
+
     const data = req.body.data || [];
     const block = nextBlock(data);
     addBlock(block);
