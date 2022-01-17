@@ -10,7 +10,6 @@ import BlockDefault from "./views/Block";
 import WalletDefault from "./views/Wallet";
 import UserDefault from "./views/User/index";
 
-// defaultTheme
 import themes from "./themes";
 import { Route, Routes } from "react-router-dom";
 
