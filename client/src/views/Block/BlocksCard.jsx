@@ -1,22 +1,9 @@
 import PropTypes from "prop-types";
-import { useEffect, useState } from "react";
-import Axios from "axios";
 
-// material-ui
 import { styled, useTheme } from "@mui/material/styles";
-import { Avatar, Box, Grid, Menu, MenuItem, Typography } from "@mui/material";
+import { Avatar, Box, Grid, Typography } from "@mui/material";
 
-// project imports
 import MainCard from "../../ui-component/cards/MainCard";
-import SkeletonEarningCard from "../../ui-component/cards/Skeleton/EarningCard";
-
-// assets
-import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import GetAppTwoToneIcon from "@mui/icons-material/GetAppOutlined";
-import FileCopyTwoToneIcon from "@mui/icons-material/FileCopyOutlined";
-import PictureAsPdfTwoToneIcon from "@mui/icons-material/PictureAsPdfOutlined";
-import ArchiveTwoToneIcon from "@mui/icons-material/ArchiveOutlined";
 
 const CardWrapper = styled(MainCard)(({ theme }) => ({
   backgroundColor: theme.palette.secondary.dark,
@@ -55,40 +42,13 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
   },
 }));
 
-// ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
-
-const BlocksCard = ({ isLoading }) => {
-  const [Blocks, setBlocks] = useState([]);
-
-  useEffect(() => {
-    setInterval(() => {
-      Axios.get("/api/blocks").then((response) => setBlocks(response.data));
-    }, 3000);
-  }, []);
-
+const BlocksCard = (props) => {
   const theme = useTheme();
-
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  if (Blocks) {
-    console.log(Blocks);
-  }
 
   return (
     <>
-      {isLoading ? (
-        <SkeletonEarningCard />
-      ) : (
-        Blocks &&
-        Blocks.reverse().map((block) => {
+      {props.Blocks &&
+        props.Blocks.reverse().map((block) => {
           return (
             <CardWrapper border={false} content={false}>
               <Box sx={{ p: 6.25 }}>
@@ -110,51 +70,6 @@ const BlocksCard = ({ isLoading }) => {
                       </Grid>
                       <Grid item>{block.header.index + 1} 번째 블록</Grid>
                       <Grid item>
-                        <Avatar
-                          variant="rounded"
-                          sx={{
-                            ...theme.typography.commonAvatar,
-                            ...theme.typography.mediumAvatar,
-                            backgroundColor: theme.palette.secondary.dark,
-                            color: theme.palette.secondary[200],
-                            zIndex: 1,
-                          }}
-                          aria-controls="menu-earning-card"
-                          aria-haspopup="true"
-                          onClick={handleClick}
-                        >
-                          <MoreHorizIcon fontSize="inherit" />
-                        </Avatar>
-                        <Menu
-                          id="menu-earning-card"
-                          anchorEl={anchorEl}
-                          keepMounted
-                          open={Boolean(anchorEl)}
-                          onClose={handleClose}
-                          variant="selectedMenu"
-                          anchorOrigin={{
-                            vertical: "bottom",
-                            horizontal: "right",
-                          }}
-                          transformOrigin={{
-                            vertical: "top",
-                            horizontal: "right",
-                          }}
-                        >
-                          <MenuItem onClick={handleClose}>
-                            <GetAppTwoToneIcon sx={{ mr: 1.75 }} /> 1번 예정
-                          </MenuItem>
-                          <MenuItem onClick={handleClose}>
-                            <FileCopyTwoToneIcon sx={{ mr: 1.75 }} /> 2번 예정
-                          </MenuItem>
-                          <MenuItem onClick={handleClose}>
-                            <PictureAsPdfTwoToneIcon sx={{ mr: 1.75 }} /> 3번
-                            예정
-                          </MenuItem>
-                          <MenuItem onClick={handleClose}>
-                            <ArchiveTwoToneIcon sx={{ mr: 1.75 }} /> 4번 예정
-                          </MenuItem>
-                        </Menu>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -174,19 +89,6 @@ const BlocksCard = ({ isLoading }) => {
                         </Typography>
                       </Grid>
                       <Grid item>
-                        <Avatar
-                          sx={{
-                            cursor: "pointer",
-                            ...theme.typography.smallAvatar,
-                            backgroundColor: theme.palette.secondary[200],
-                            color: theme.palette.secondary.dark,
-                          }}
-                        >
-                          <ArrowUpwardIcon
-                            fontSize="inherit"
-                            sx={{ transform: "rotate3d(1, 1, 1, 45deg)" }}
-                          />
-                        </Avatar>
                       </Grid>
                     </Grid>
                   </Grid>
@@ -205,8 +107,7 @@ const BlocksCard = ({ isLoading }) => {
               </Box>
             </CardWrapper>
           );
-        })
-      )}
+        })}
     </>
   );
 };

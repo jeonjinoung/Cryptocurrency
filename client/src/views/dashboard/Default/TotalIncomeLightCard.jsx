@@ -1,17 +1,13 @@
 import PropTypes from 'prop-types';
+import Axios from "axios";
 
-// material-ui
 import { useTheme, styled } from '@mui/material/styles';
-import { Avatar, Box, List, ListItem, ListItemAvatar, ListItemText, Typography } from '@mui/material';
+import { Box, List, ListItem, ListItemText, Typography } from '@mui/material';
 
-// project imports
 import MainCard from '../../../ui-component/cards/MainCard';
-import TotalIncomeCard from '../../../ui-component/cards/Skeleton/TotalIncomeCard';
 
-// assets
-import StorefrontTwoToneIcon from '@mui/icons-material/StorefrontTwoTone';
+import { useEffect, useState } from 'react';
 
-// styles
 const CardWrapper = styled(MainCard)(({ theme }) => ({
     overflow: 'hidden',
     position: 'relative',
@@ -37,57 +33,47 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     }
 }));
 
-// ==============================|| DASHBOARD - TOTAL INCOME LIGHT CARD ||============================== //
-
 const TotalIncomeLightCard = ({ isLoading }) => {
     const theme = useTheme();
+    const [SuccessPeer, setSuccessPeer] = useState([]);
+
+    useEffect(() => {
+        Axios.get("/api/peer/peers").then((response) => {
+            setSuccessPeer(response.data.peer)
+        })
+    }, [])
 
     return (
         <>
-            {isLoading ? (
-                <TotalIncomeCard />
-            ) : (
-                <CardWrapper border={false} content={false}>
-                    <Box sx={{ p: 2 }}>
-                        <List sx={{ py: 0 }}>
-                            <ListItem alignItems="center" disableGutters sx={{ py: 0 }}>
-                                <ListItemAvatar>
-                                    <Avatar
-                                        variant="rounded"
+            {SuccessPeer && SuccessPeer.map((peer) => {
+                return <CardWrapper border={false} content={false}>
+                <Box sx={{ p: 2 }}>
+                    <List sx={{ py: 0 }}>
+                        <ListItem alignItems="center" disableGutters sx={{ py: 0 }}>
+                            <ListItemText
+                                sx={{
+                                    py: 0,
+                                    mt: 0.45,
+                                    mb: 0.45
+                                }}
+                                primary={<Typography variant="subtitle2">연결된 노드</Typography>}
+                                secondary={
+                                    <Typography
+                                        variant="h4"
                                         sx={{
-                                            ...theme.typography.commonAvatar,
-                                            ...theme.typography.largeAvatar,
-                                            backgroundColor: theme.palette.warning.light,
-                                            color: theme.palette.warning.dark
+                                            color: theme.palette.grey[500],
+                                            mt: 0.5
                                         }}
                                     >
-                                        <StorefrontTwoToneIcon fontSize="inherit" />
-                                    </Avatar>
-                                </ListItemAvatar>
-                                <ListItemText
-                                    sx={{
-                                        py: 0,
-                                        mt: 0.45,
-                                        mb: 0.45
-                                    }}
-                                    primary={<Typography variant="h4">$203k</Typography>}
-                                    secondary={
-                                        <Typography
-                                            variant="subtitle2"
-                                            sx={{
-                                                color: theme.palette.grey[500],
-                                                mt: 0.5
-                                            }}
-                                        >
-                                            Total Income
-                                        </Typography>
-                                    }
-                                />
-                            </ListItem>
-                        </List>
-                    </Box>
-                </CardWrapper>
-            )}
+                                        {peer}
+                                    </Typography>
+                                }
+                            />
+                        </ListItem>
+                    </List>
+                </Box>
+            </CardWrapper>
+            })}
         </>
     );
 };

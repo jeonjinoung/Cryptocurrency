@@ -1,36 +1,58 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Axios from "axios";
 
 const PeerDefault = () => {
   const [Peer, setPeer] = useState("");
+  const [SuccessPeer, setSuccessPeer] = useState([]);
 
   const test = {
-    data: [Peer],
+    data: [`ws://localhost:${Peer}`],
   };
 
+  useEffect(() => {
+    Axios.get("/api/peer/peers").then((response) => {
+      setSuccessPeer(response.data.peer)
+    })
+  }, [])
+  
   const onSubmitPeer = (e) => {
     e.preventDefault();
-    console.log(Peer);
-    Axios.post("/api/addPeers", test).then((response) => {
-      if (response.data) {
-        alert("성공");
-      } else {
-        alert("실패");
-      }
-    });
+    const ws = `127.0.0.1:${Peer}`
+    if (!SuccessPeer.includes(ws)) {
+      Axios.post("/api/peer/addPeers", test).then((response) => {
+        const { peer } = response.data;
+        Axios.get("/api/peer/peers").then((response) => {
+          const peerArray = response.data.peer;
+          if (peerArray.includes(ws)) {
+            alert(`${peer} 성공`);
+            setSuccessPeer(SuccessPeer.concat(ws));
+            setPeer("");
+          } else {
+            alert(`${peer} 실패`);
+            setPeer("");
+          }
+        })
+      });
+    } else {
+      alert(`${ws}는 이미 연결된 상태입니다.`);
+      setPeer("");
+    }
   };
 
   const onPeerChange = (e) => {
-    console.log(e.target.value);
     setPeer(e.target.value);
-    console.log(Peer);
   };
 
   return (
     <>
+      4 자리 포트 번호를 입력해주세요.
       <form onSubmit={onSubmitPeer}>
-        <input type="text" onChange={onPeerChange} />
-        <button>노드 추가하기</button>
+        <input type="number" value={Peer} onChange={onPeerChange} />
+        <button>추가하기</button>
+        <div>연결된 목록</div>
+        {SuccessPeer && SuccessPeer.map((peer) => {
+          return <div key={peer}>{peer}</div>
+        })}
       </form>
     </>
   );

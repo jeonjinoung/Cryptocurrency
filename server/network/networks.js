@@ -1,11 +1,11 @@
-/* P2P Server (노드와 노드 간의 통신) */
 const WebSocket = require("ws");
 const {
   getLastBlock,
-  getBlocks,
   replaceChain,
 } = require("../blockchain/blocks");
 const { createHash } = require("../utils/hash");
+const { responseLatestMsg, responseAllChainMsg, queryAllMsg, queryLatestMsg } = require("./massage/massage");
+const { MessageType } = require("./massage/type");
 
 function initP2PServer(test_port) {
   const server = new WebSocket.Server({ port: test_port });
@@ -32,53 +32,36 @@ function getSockets() {
 }
 
 function write(ws, message) {
+  console.log(4444444444444444444444444);
   ws.send(JSON.stringify(message));
 }
 
 function broadcast(message) {
+  console.log(333333333333333333333);
+  console.log(message);
+  console.log(333333333333333333333);
   sockets.forEach((socket) => {
     write(socket, message);
   });
 }
+
 function connectToPeers(newPeers) {
   newPeers.forEach((peer) => {
     const ws = new WebSocket(peer);
-    console.log(ws);
     ws.on("open", () => {
       console.log("open");
       initConnection(ws);
     });
     ws.on("error", (errorType) => {
       console.log("connetion Failed!" + errorType);
+      return false;
     });
   });
 }
 
-const MessageType = {
-  QUERY_LATEST: 0,
-  QUERY_ALL: 1,
-  RESPONSE_BLOCKCHAIN: 2,
-};
-
 function initMessageHandler(ws) {
   ws.on("message", (data) => {
     const message = JSON.parse(data);
-
-    console.log(
-      message.type,
-      message.type,
-      message.type,
-      message.type,
-      message.type
-    );
-    console.log(message);
-    console.log(
-      message.type,
-      message.type,
-      message.type,
-      message.type,
-      message.type
-    );
 
     if (message === null) {
       return;
@@ -98,29 +81,9 @@ function initMessageHandler(ws) {
   });
 }
 
-function responseLatestMsg() {
-  return {
-    type: MessageType.RESPONSE_BLOCKCHAIN,
-    data: JSON.stringify([getLastBlock()]),
-  };
-}
-
-function responseAllChainMsg() {
-  console.log("블록 보내기");
-  console.log(getBlocks());
-  console.log("블록 보내기");
-  return {
-    type: MessageType.RESPONSE_BLOCKCHAIN,
-    data: JSON.stringify(getBlocks()),
-  };
-}
-
 function handleBlockChainResponse(message) {
   const { addBlock } = require("../utils/isValidBlock");
 
-  console.log("받은 데이터");
-  console.log(JSON.parse(message.data));
-  console.log("받은 데이터");
   const receiveBlocks = JSON.parse(message.data);
   const latestReceiveBlock = receiveBlocks[receiveBlocks.length - 1];
   const latestMyBlock = getLastBlock();
@@ -130,11 +93,9 @@ function handleBlockChainResponse(message) {
     return;
   }
 
-  /* 두 블록체인의 길이 비교 */
   if (latestReceiveBlock.header.index > latestMyBlock.header.index) {
     if (createHash(latestMyBlock) === latestReceiveBlock.header.previousHash) {
       if (addBlock(latestReceiveBlock)) {
-        console.log("가즈아");
         broadcast(responseLatestMsg());
       } else {
         console.log("Invaild Block!!");
@@ -147,21 +108,6 @@ function handleBlockChainResponse(message) {
   } else {
     console.log("Do nothing.");
   }
-}
-
-function queryAllMsg() {
-  return {
-    type: MessageType.QUERY_ALL,
-    data: null,
-  };
-}
-
-/* 연결 되자마자 처음 보냄 */
-function queryLatestMsg() {
-  return {
-    type: MessageType.QUERY_LATEST,
-    data: null,
-  };
 }
 
 function initErrorHandler(ws) {
@@ -186,5 +132,4 @@ module.exports = {
   initP2PServer,
   broadcast,
   handleBlockChainResponse,
-  responseLatestMsg,
 };
