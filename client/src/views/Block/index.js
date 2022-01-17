@@ -1,11 +1,11 @@
-import BlocksCard from "./BlocksCard";
 import AddBlockCard from "./AddBlockCard";
+import BlocksCard from "./BlocksCard";
 
 const BlockDefault = () => {
   return (
     <>
-      <BlocksCard />
       <AddBlockCard />
+      <BlocksCard />
     </>
   );
 };
