@@ -59,11 +59,11 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 const AddBlockCard = ({ isLoading }) => {
   const [Blocks, setBlocks] = useState([]);
-  
+  const [AdBlocks, setAdBlocks] = useState([]);
   const blocks = {
     //배열로 넣어줘야된다. Block은 배열로 받았으니까
-    data : ["복습을 해보자 Axios에대해서"]
-  }
+    data: [AdBlocks],
+  };
 
   const onSubmitAddBlock = (e) => {
     e.preventDefault();
@@ -77,6 +77,11 @@ const AddBlockCard = ({ isLoading }) => {
     });
   };
 
+  const onBlockChange = (e) => {
+    setAdBlocks(e.target.value);
+    console.log(AdBlocks);
+  };
+
   const theme = useTheme();
 
   const [anchorEl, setAnchorEl] = useState(null);
@@ -88,6 +93,7 @@ const AddBlockCard = ({ isLoading }) => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   return (
     <>
       <form onSubmit={onSubmitAddBlock}>
@@ -214,7 +220,11 @@ const AddBlockCard = ({ isLoading }) => {
             );
           })
         )}
-        <button>블록추가</button>
+        <label>
+          Data
+          <input type="text" onChange={onBlockChange} />
+        </label>
+        ;<button>블록추가</button>
       </form>
     </>
   );
