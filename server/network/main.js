@@ -45,9 +45,7 @@ app.use(passport.initialize());
 function initHttpServer() {
   app.post("/api/addPeers", (req, res) => {
     const data = req.body.data || [];
-    console.log(44444444444444444444444444);
     console.log(req.body);
-    console.log(44444444444444444444444444);
     connectToPeers(data);
     res.send(data);
   });
@@ -117,9 +115,7 @@ function initHttpServer() {
   });
 
   app.post("/api/mineBlock", (req, res) => {
-    console.log(33333333333333333333);
     console.log(req.body);
-    console.log(33333333333333333333);
     const { addBlock } = require("../utils/isValidBlock");
     // work();
 
@@ -138,12 +134,15 @@ function initHttpServer() {
     process.exit();
   });
 
+  console.log(11111111111111111111111111111);
   app.get("/api/address", (req, res) => {
+    console.log(req.body);
     const address = getPublicKeyFromWallet().toString();
     if (address != "") {
       res.send({ address: address });
     } else {
       res.send("empty address!");
+      console.log(77777777777777777777777);
     }
   });
 

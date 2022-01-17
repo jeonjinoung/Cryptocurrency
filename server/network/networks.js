@@ -40,13 +40,9 @@ function broadcast(message) {
     write(socket, message);
   });
 }
-console.log(5555555555555555555555555);
 function connectToPeers(newPeers) {
-  console.log(66666666666666666666666666);
   newPeers.forEach((peer) => {
-    console.log(777777777777777777777777);
     const ws = new WebSocket(peer);
-    console.log(8888888888888888888888888888);
     console.log(ws);
     ws.on("open", () => {
       console.log("open");
