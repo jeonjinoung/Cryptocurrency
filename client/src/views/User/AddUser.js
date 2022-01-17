@@ -5,24 +5,22 @@ const AddUser = () => {
   const [Name, setName] = useState("");
   const [PassWord, setPassWord] = useState("");
   const [Email, setEmail] = useState("");
-  const [Age, setAge] = useState("");
 
   const user = {
     name: Name,
     pw: PassWord,
     email: Email,
-    age: Age,
   };
-
+  let cc;
   const onSubmitUser = (e) => {
     e.preventDefault();
-    console.log(Name, PassWord, Email, Age);
-    Axios.post("/api/addUser", user).then((response) => {
+    console.log(Name, PassWord, Email);
+    Axios.post(`/api/${cc}/addUser`, user).then((response) => {
       console.log(response.data)
       if (response.data.success) {
-        alert("성공");
+        alert("회원가입 성공");
       } else {
-        alert("실패");
+        alert("회원가입 실패");
       }
     });
   };
@@ -41,32 +39,23 @@ const AddUser = () => {
     setEmail(e.target.value);
     console.log(Email);
   };
-  const onAgeChange = (e) => {
-    setAge(e.target.value);
-    console.log(Age);
-  };
 
   return (
     <>
       <form onSubmit={onSubmitUser}>
-        <label>
-          이름
-          <input type="text" onChange={onUserChange} />
-        </label>
-        <br />
-        <label>
-          비밀번호
-          <input type="text" onChange={onPWChange} />
-        </label>
-        <br />
         <label>
           이메일
           <input type="text" onChange={onEmailChange} />
         </label>
         <br />
         <label>
-          나이
-          <input type="text" onChange={onAgeChange} />
+          비밀번호
+          <input type="password" onChange={onPWChange} />
+        </label>
+        <br />
+        <label>
+          이름
+          <input type="text" onChange={onUserChange} />
         </label>
         <br />
         <button>회원가입</button>
