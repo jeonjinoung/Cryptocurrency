@@ -44,8 +44,10 @@ app.use(passport.initialize());
 
 function initHttpServer() {
   app.post("/api/addPeers", (req, res) => {
-    console.log(req.body);
     const data = req.body.data || [];
+    console.log(44444444444444444444444444);
+    console.log(req.body);
+    console.log(44444444444444444444444444);
     connectToPeers(data);
     res.send(data);
   });
