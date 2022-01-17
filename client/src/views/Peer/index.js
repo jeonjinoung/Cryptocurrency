@@ -5,7 +5,7 @@ const PeerDefault = () => {
   const [Peer, setPeer] = useState("");
 
   const test = {
-    id: Peer,
+    data: [Peer],
   };
 
   const onSubmitPeer = (e) => {

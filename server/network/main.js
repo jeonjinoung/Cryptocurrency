@@ -26,7 +26,7 @@ const passportConfig = require("../passport");
 const app = express();
 passportConfig();
 const session = require("express-session");
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 
 sequelize
   .sync({ force: false })
@@ -44,8 +44,8 @@ app.use(passport.initialize());
 
 function initHttpServer() {
   app.post("/api/addPeers", (req, res) => {
-    console.log(req.body);
     const data = req.body.data || [];
+    console.log(req.body);
     connectToPeers(data);
     res.send(data);
   });
@@ -75,7 +75,7 @@ function initHttpServer() {
     }
   });
 
-  app.post("/api/Login", async (req, res) => {    
+  app.post("/api/Login", async (req, res) => {
     passport.authenticate("local", (err, user, info) => {
       if (err) {
         return res.status(401).json({ loginSuccess: false });
@@ -90,10 +90,10 @@ function initHttpServer() {
         const UserInfo = await User.findOne({
           where: { id: user.id },
           attributes: {
-            exclude: ['pw']
-          }
-        })
-        return res.status(200).json({ UserInfo , loginSuccess : true });
+            exclude: ["pw"],
+          },
+        });
+        return res.status(200).json({ UserInfo, loginSuccess: true });
       });
     })(req, res);
   });
@@ -115,6 +115,7 @@ function initHttpServer() {
   });
 
   app.post("/api/mineBlock", (req, res) => {
+    console.log(req.body);
     const { addBlock } = require("../utils/isValidBlock");
     // work();
 
@@ -133,12 +134,15 @@ function initHttpServer() {
     process.exit();
   });
 
+  console.log(11111111111111111111111111111);
   app.get("/api/address", (req, res) => {
+    console.log(req.body);
     const address = getPublicKeyFromWallet().toString();
     if (address != "") {
       res.send({ address: address });
     } else {
       res.send("empty address!");
+      console.log(77777777777777777777777);
     }
   });
 
