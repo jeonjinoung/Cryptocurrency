@@ -1,7 +1,11 @@
 /* P2P Server (노드와 노드 간의 통신) */
 const WebSocket = require("ws");
-const { getLastBlock, getBlocks, replaceChain } = require("../blockchain/blocks");
-const { createHash } = require('../utils/hash');
+const {
+  getLastBlock,
+  getBlocks,
+  replaceChain,
+} = require("../blockchain/blocks");
+const { createHash } = require("../utils/hash");
 
 function initP2PServer(test_port) {
   const server = new WebSocket.Server({ port: test_port });
@@ -9,7 +13,7 @@ function initP2PServer(test_port) {
     initConnection(ws);
   });
   server.on("error", () => {
-    console.log("error")
+    console.log("error");
   });
   console.log("Listening webSocket port : " + test_port);
 }
@@ -36,10 +40,10 @@ function broadcast(message) {
     write(socket, message);
   });
 }
-
 function connectToPeers(newPeers) {
   newPeers.forEach((peer) => {
     const ws = new WebSocket(peer);
+    console.log(ws);
     ws.on("open", () => {
       console.log("open");
       initConnection(ws);
@@ -60,10 +64,22 @@ function initMessageHandler(ws) {
   ws.on("message", (data) => {
     const message = JSON.parse(data);
 
-    console.log(message.type, message.type, message.type, message.type, message.type);
+    console.log(
+      message.type,
+      message.type,
+      message.type,
+      message.type,
+      message.type
+    );
     console.log(message);
-    console.log(message.type, message.type, message.type, message.type, message.type);
-    
+    console.log(
+      message.type,
+      message.type,
+      message.type,
+      message.type,
+      message.type
+    );
+
     if (message === null) {
       return;
     }
@@ -118,7 +134,7 @@ function handleBlockChainResponse(message) {
   if (latestReceiveBlock.header.index > latestMyBlock.header.index) {
     if (createHash(latestMyBlock) === latestReceiveBlock.header.previousHash) {
       if (addBlock(latestReceiveBlock)) {
-        console.log("가즈아")
+        console.log("가즈아");
         broadcast(responseLatestMsg());
       } else {
         console.log("Invaild Block!!");

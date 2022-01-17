@@ -1,9 +1,11 @@
+import AddressDefault from "./Wallet";
+
 const WalletDefault = () => {
-    return (
-      <>
-        <p>WalletDefault</p>
-      </>
-    );
+  return (
+    <>
+      <AddressDefault></AddressDefault>
+    </>
+  );
 };
 
 export default WalletDefault;
