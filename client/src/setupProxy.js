@@ -7,6 +7,12 @@ module.exports = function(app) {
     createProxyMiddleware({
       target: `http://localhost:${HTTP_PORT}`,
       changeOrigin: true,
+      // router: {
+      //   '/1' : 'http://localhost:4001',
+      //   '/2' : 'http://localhost:4002', 
+      //   '/3' : 'http://localhost:4003', 
+      //   '/4' : 'http://localhost:4004', 
+      // }
     })
   );
 };
