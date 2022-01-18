@@ -1,6 +1,5 @@
 const merkle = require("merkle");
 const { Blocks, isValidTimestamp, getLastBlock, getDifficulty } = require("../blockchain/blocks");
-const { broadcast, responseLatestMsg } = require("../network/networks");
 const { createHash } = require("./hash");
 
 function isValidBlockStructure(block) {
@@ -39,7 +38,6 @@ function isValidNewBlock(newBlock, previousBlock) {
 function addBlock(newBlock) {
   if (isValidNewBlock(newBlock, getLastBlock())) {
     Blocks.push(newBlock);
-
     return true;
   }
   return false;
