@@ -8,7 +8,6 @@ const AddressDefault = () => {
     e.preventDefault();
     Axios.get("/api/wallet/address").then((response) => {
       if (response.data) {
-        alert("성공");
         //환경변수를 통하여 Address안에 값을 넣어주기위한 작업
         setAddress(response.data.address);
         //작업끝난후 콘솔찍어보면 Address안에 값이 들어가 있는것을 알 수 있다.

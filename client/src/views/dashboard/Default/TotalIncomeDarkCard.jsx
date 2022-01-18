@@ -10,6 +10,8 @@ import TotalIncomeCard from '../../../ui-component/cards/Skeleton/TotalIncomeCar
 
 // assets
 import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
+import { useState, useEffect } from "react";
+import Axios from "axios";
 
 // styles
 const CardWrapper = styled(MainCard)(({ theme }) => ({
@@ -43,7 +45,20 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 const TotalIncomeDarkCard = ({ isLoading }) => {
     const theme = useTheme();
+    const [Address, setAddress] = useState("");
 
+    const WalletAddress = `${Address.substring(0, 20)}...`;
+
+    useEffect(() => {
+      Axios.get("/api/wallet/address").then((response) => {
+        if (response.data) {
+          setAddress(response.data.address);
+        } else {
+          alert("실패");
+        }
+      });
+    }, [])
+      
     return (
         <>
             {isLoading ? (
@@ -74,12 +89,12 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
                                     }}
                                     primary={
                                         <Typography variant="h4" sx={{ color: '#fff' }}>
-                                            $203k
+                                            Key 값
                                         </Typography>
                                     }
                                     secondary={
                                         <Typography variant="subtitle2" sx={{ color: 'primary.light', mt: 0.25 }}>
-                                            Total Income
+                                            {WalletAddress}
                                         </Typography>
                                     }
                                 />
