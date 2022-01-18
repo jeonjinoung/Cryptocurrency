@@ -38,7 +38,6 @@ function isValidNewBlock(newBlock, previousBlock) {
 function addBlock(newBlock) {
   if (isValidNewBlock(newBlock, getLastBlock())) {
     Blocks.push(newBlock);
-
     return true;
   }
   return false;

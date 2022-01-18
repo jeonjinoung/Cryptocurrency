@@ -32,14 +32,10 @@ function getSockets() {
 }
 
 function write(ws, message) {
-  console.log(4444444444444444444444444);
   ws.send(JSON.stringify(message));
 }
 
 function broadcast(message) {
-  console.log(333333333333333333333);
-  console.log(message);
-  console.log(333333333333333333333);
   sockets.forEach((socket) => {
     write(socket, message);
   });

@@ -15,7 +15,6 @@ const AddUser = () => {
     e.preventDefault();
     console.log(Name, PassWord, Email);
     Axios.post(`/api/user/addUser`, user).then((response) => {
-      console.log(response.data)
       if (response.data.success) {
         alert("회원가입 성공");
       } else {
@@ -26,17 +25,14 @@ const AddUser = () => {
 
   const onUserChange = (e) => {
     setName(e.target.value);
-    console.log(Name);
   };
 
   const onPWChange = (e) => {
     setPassWord(e.target.value);
-    console.log(PassWord);
   };
 
   const onEmailChange = (e) => {
     setEmail(e.target.value);
-    console.log(Email);
   };
 
   return (
