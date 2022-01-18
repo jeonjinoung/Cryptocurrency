@@ -10,8 +10,8 @@ const PeerRouter = require('./route/PeerRouter');
 const BlockRouter = require('./route/BlockRouter');
 const WalletRouter = require('./route/WalletRouter');
 
-const HTTP_PORT = process.env.HTTP_PORT || 4001;
-const P2P_PORT = process.env.P2P_PORT || 7001;
+const HTTP_PORT = process.env.HTTP_PORT || 4000;
+const P2P_PORT = process.env.P2P_PORT || 7000;
 
 function initHttpServer() {  
   passportConfig();
