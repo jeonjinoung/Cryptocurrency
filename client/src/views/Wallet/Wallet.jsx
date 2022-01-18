@@ -5,7 +5,7 @@ const AddressDefault = () => {
   const [Address, setAddress] = useState("");
 
   const wallets = {
-    adress: Address,
+    address: Address,
   };
 
   const onSubmitAddress = (e) => {

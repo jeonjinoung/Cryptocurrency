@@ -45,7 +45,9 @@ app.use(passport.initialize());
 function initHttpServer() {
   app.post("/api/addPeers", (req, res) => {
     const data = req.body.data || [];
+    console.log(88888888888);
     console.log(req.body);
+    console.log(88888888888);
     connectToPeers(data);
     res.send(data);
   });
@@ -97,11 +99,15 @@ function initHttpServer() {
       });
     })(req, res);
   });
-
+  console.log(6666666666666666);
   app.get("/api/peers", (req, res) => {
+    console.log(777777777777777777777);
     let sockInfo = [];
+    console.log(888888888888);
     getSockets().forEach((s) => {
+      console.log(9999999999999999999);
       sockInfo.push(s._socket.remoteAddress + ":" + s._socket.remotePort);
+      console.log(1010101101010110);
     });
     res.send(sockInfo);
   });
@@ -134,7 +140,6 @@ function initHttpServer() {
     process.exit();
   });
 
-  console.log(11111111111111111111111111111);
   app.get("/api/address", (req, res) => {
     console.log(req.body);
     const address = getPublicKeyFromWallet().toString();
@@ -142,7 +147,6 @@ function initHttpServer() {
       res.send({ address: address });
     } else {
       res.send("empty address!");
-      console.log(77777777777777777777777);
     }
   });
 
