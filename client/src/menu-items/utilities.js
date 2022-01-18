@@ -1,12 +1,13 @@
 // assets
-import { IconTypography, IconUser, IconWallet, IconCurrencyBitcoin } from '@tabler/icons';
+import { IconTypography, IconUser, IconWallet, IconCurrencyBitcoin, IconCirclePlus } from '@tabler/icons';
 
 // constant
 const icons = {
     IconTypography,
     IconUser,
     IconWallet,
-    IconCurrencyBitcoin
+    IconCurrencyBitcoin,
+    IconCirclePlus
 };
 
 // ==============================|| UTILITIES MENU ITEMS ||============================== //
@@ -18,10 +19,10 @@ const utilities = {
     children: [
         {
             id: 'util-typography',
-            title: 'User',
+            title: 'peer',
             type: 'item',
             url: '/user',
-            icon: icons.IconUser,
+            icon: icons.IconCirclePlus,
             breadcrumbs: false
         },
         {

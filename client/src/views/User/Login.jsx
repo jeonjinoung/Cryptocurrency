@@ -13,7 +13,7 @@ const Login = () => {
   const onSubmitUser = (e) => {
     e.preventDefault();
     console.log(PassWord, Email);
-    Axios.post("/api/Login", user).then((response) => {
+    Axios.post("/api/user/Login", user).then((response) => {
       console.log(4444444444444444444444);
       console.log(response.data);
       console.log(3333333333333333333333333);
@@ -32,7 +32,6 @@ const Login = () => {
 
   const onEmailChange = (e) => {
     setEmail(e.target.value);
-    console.log(Email);
   };
 
   return (

@@ -33,7 +33,8 @@ function createGenesisBlock() {
 let Blocks = [createGenesisBlock()];
 
 function replaceChain(newBlocks) {
-  const { broadcast, responseLatestMsg } = require('../network/networks');
+  const { broadcast } = require('../network/networks');
+  const { responseLatestMsg } = require('../network/massage/massage');
 
   if (isValidChain(newBlocks)) {  
     if ((newBlocks.length > Blocks.length) || (newBlocks.length === Blocks.length)) {
@@ -68,6 +69,7 @@ function getBlocks() {
 }
 
 function getLastBlock() {
+  console.log(22222222222222222);
   return Blocks[Blocks.length - 1];
 }
 

@@ -11,11 +11,10 @@ const AddUser = () => {
     pw: PassWord,
     email: Email,
   };
-  let cc;
   const onSubmitUser = (e) => {
     e.preventDefault();
     console.log(Name, PassWord, Email);
-    Axios.post(`/api/${cc}/addUser`, user).then((response) => {
+    Axios.post(`/api/user/addUser`, user).then((response) => {
       console.log(response.data)
       if (response.data.success) {
         alert("회원가입 성공");

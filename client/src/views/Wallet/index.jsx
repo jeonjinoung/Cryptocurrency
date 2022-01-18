@@ -3,7 +3,7 @@ import AddressDefault from "./Wallet";
 const WalletDefault = () => {
   return (
     <>
-      <AddressDefault></AddressDefault>
+      <AddressDefault />
     </>
   );
 };
