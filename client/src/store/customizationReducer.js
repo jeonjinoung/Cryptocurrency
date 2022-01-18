@@ -1,13 +1,7 @@
-// project imports
-import config from '../config';
-
-// action - state management
 import * as actionTypes from './actions';
 
 export const initialState = {
     isOpen: [], // for active default menu
-    fontFamily: config.fontFamily,
-    borderRadius: config.borderRadius,
     opened: true
 };
 
@@ -30,12 +24,12 @@ const customizationReducer = (state = initialState, action) => {
         case actionTypes.SET_FONT_FAMILY:
             return {
                 ...state,
-                fontFamily: action.fontFamily
+                fontFamily: `'Roboto', sans-serif`
             };
         case actionTypes.SET_BORDER_RADIUS:
             return {
                 ...state,
-                borderRadius: action.borderRadius
+                borderRadius: 12
             };
         default:
             return state;

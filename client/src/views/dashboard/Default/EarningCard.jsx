@@ -131,7 +131,7 @@ const EarningCard = ({ isLoading }) => {
                                 >
                                     <div>Index : {index}</div>
                                     <div>PreviousHash : {previousHashDisplay}</div>
-                                    <div>Timestamp : {new Date(timestamp).toLocaleString()}</div>
+                                    <div>Timestamp : {new Date(timestamp * 1000).toLocaleString()}</div>
                                     <div>MerkleRoot : {merkleRootDisplay}</div>
                                     <div>Version : {version}</div>
                                 </Typography>
