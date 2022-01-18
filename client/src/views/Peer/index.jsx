@@ -11,13 +11,13 @@ const PeerDefault = () => {
 
   useEffect(() => {
     Axios.get("/api/peer/peers").then((response) => {
-      setSuccessPeer(response.data.peer)
-    })
-  }, [])
-  
+      setSuccessPeer(response.data.peer);
+    });
+  }, []);
+
   const onSubmitPeer = (e) => {
     e.preventDefault();
-    const ws = `127.0.0.1:${Peer}`
+    const ws = `127.0.0.1:${Peer}`;
     if (!SuccessPeer.includes(ws)) {
       Axios.post("/api/peer/addPeers", test).then((response) => {
         const { peer } = response.data;
@@ -31,7 +31,7 @@ const PeerDefault = () => {
             alert(`${peer} 실패`);
             setPeer("");
           }
-        })
+        });
       });
     } else {
       alert(`${ws}는 이미 연결된 상태입니다.`);
@@ -50,9 +50,10 @@ const PeerDefault = () => {
         <input type="number" value={Peer} onChange={onPeerChange} />
         <button>추가하기</button>
         <div>연결된 목록</div>
-        {SuccessPeer && SuccessPeer.map((peer) => {
-          return <div key={peer}>{peer}</div>
-        })}
+        {SuccessPeer &&
+          SuccessPeer.map((peer) => {
+            return <div key={peer}>{peer}</div>;
+          })}
       </form>
     </>
   );

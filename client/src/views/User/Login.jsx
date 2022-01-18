@@ -32,7 +32,6 @@ const Login = () => {
 
   const onEmailChange = (e) => {
     setEmail(e.target.value);
-    console.log(Email);
   };
 
   return (
