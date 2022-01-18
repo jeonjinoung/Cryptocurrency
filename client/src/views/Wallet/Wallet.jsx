@@ -11,7 +11,7 @@ const AddressDefault = () => {
   const onSubmitAddress = (e) => {
     e.preventDefault();
     console.log(Address);
-    Axios.get("/api/address", wallets).then((response) => {
+    Axios.get("/api/wallet/address", wallets).then((response) => {
       console.log(response.data);
       if (response.data) {
         alert("성공");

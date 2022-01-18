@@ -6,7 +6,7 @@ const { getPublicKeyFromWallet } = require("../../wallet/wallet");
 //                /api/wallet
 // =============================================
 
-router.get("/api/address", (req, res) => {
+router.get("/address", (req, res) => {
   console.log(req.body);
   const address = getPublicKeyFromWallet().toString();
   if (address != "") {
