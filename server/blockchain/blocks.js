@@ -69,7 +69,6 @@ function getBlocks() {
 }
 
 function getLastBlock() {
-  console.log(22222222222222222);
   return Blocks[Blocks.length - 1];
 }
 

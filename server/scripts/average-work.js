@@ -26,6 +26,8 @@ function work() {
   }
 }
 
+work();
+
 module.exports = {
   work
 }
