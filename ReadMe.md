@@ -1,7 +1,6 @@
-# Cryptocurrency project
+# 코인 빌드 스터디
 
-#### blockchain : 블록의 생성, 검증, 합의 알고리즘 || 프로토콜 변경 시 수정
-#### server : HTTP / P2P 서버
-#### utils : 기능
-#### wallet : 지갑
-
+### 팀원 : 전진영 <a href="https://github.com/jeonjinoung"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/></a> , 박준혁 <a href="https://github.com/berrypjh"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/></a> , 곽지현 <a href="https://github.com/TsukinoHikari"><img src="https://img.shields.io/badge/GitHub-181717?style=flat-square&logo=GitHub&logoColor=white"/></a> 
+---------------------------------------
+### 목적
+블록체인, POW, 지갑생성 이해하기
