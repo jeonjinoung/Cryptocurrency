@@ -9,36 +9,43 @@
 > blockchain
 >> blockclass.js
 >> blocks.js
-
+>
 > config
 >> config.json
-
+>
 > models
 >> block.js
 >> index.js
 >> user.js
-
+>
 > network
 >> message
 >>> massage.js
 >>> type.js
+>>
 >> route
 >>> BlockRouter.js
 >>> PeerRouter.js
 >>> UserRouter.js
 >>> WalletRouter.js
+>>
 >> main.js
 >> networks.js
+>
 > passport
 >> index.js
 >> local.js
+>
 > scripts
 >> average-work.js
+>
 > utils
 >> hash.js
 >> isValidBlock.js
+>
 > wallet
 >> wallet.js
+>
 > package-lock.json
 > package.json
 > yarn.lock
