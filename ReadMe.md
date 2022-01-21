@@ -4,3 +4,22 @@
 ---------------------------------------
 ### 목적
 블록체인, POW, 지갑생성 이해하기
+
+### 서버 폴더 구조
+```
+> blockchain - blockclass.js, blocks.js
+> config - config.json
+> models - block.js, index.js, user.js
+> network
+>> message
+>>> massage.js
+>>> type.js
+>> route
+>>> BlockR
+>> main.js
+>> networks.js
+> passport
+> scripts
+> utils
+> wallet
+```
