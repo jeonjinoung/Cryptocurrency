@@ -6,7 +6,6 @@
 블록체인, POW, 지갑생성 이해하기
 
 ### 서버 폴더 구조
-```
 > blockchain - blockclass.js, blocks.js
 > config - config.json
 > models - block.js, index.js, user.js
@@ -22,4 +21,3 @@
 > scripts
 > utils
 > wallet
-```
