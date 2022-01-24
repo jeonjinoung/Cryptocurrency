@@ -6,6 +6,7 @@ const {
   getVersion,
   nextBlock,
   getLastBlock,
+  generatenextBlockWithTransaction
 } = require("../../blockchain/blocks");
 const { addBlock } = require("../../utils/isValidBlock");
 const { broadcast } = require("../networks");
@@ -28,6 +29,7 @@ router.post("/mineBlock", async (req, res) => {
   const data = req.body.data || [];
   const block = nextBlock(data);
   addBlock(block);
+  console.log(block)
   broadcast(responseLatestMsg());
   res.send(block);
   const { previousHash, timestamp, merkleRoot, difficulty, nonce } =
@@ -41,6 +43,20 @@ router.post("/mineBlock", async (req, res) => {
     body: block.body[0],
   });
 });
+
+router.post('/mineTransaction', (req, res) => {
+  const address = req.body.address;
+  const amount = req.body.amount;
+  try {
+      const resp = generatenextBlockWithTransaction(address, amount);
+      res.send(resp);
+  } catch (e) {
+      console.log(e.message);
+      res.status(400).send(e.message);
+  }
+});
+
+
 
 router.get("/version", (req, res) => {
   res.send(getVersion());
