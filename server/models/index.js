@@ -4,6 +4,7 @@ const config = require("../config/config")[env];
 const db = {};
 const User = require("./user");
 const Block = require("./block");
+const Address = require("./address")
 
 const sequelize = new Sequelize(
   config.database,
@@ -15,9 +16,11 @@ const sequelize = new Sequelize(
 db.sequelize = sequelize;
 db.User = User;
 db.Block = Block;
+db.Address = Address;
 db.Sequelize = Sequelize;
 
 User.init(sequelize);
 Block.init(sequelize);
+Address.init(sequelize);
 
 module.exports = db;
