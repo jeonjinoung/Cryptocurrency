@@ -8,7 +8,7 @@ import Dashboard from "./views/dashboard/Default";
 import PeerDefault from "./views/Peer";
 import BlockDefault from "./views/Block";
 import WalletDefault from "./views/Wallet";
-import UserDefault from "./views/User/index";
+// import UserDefault from "./views/User/index";
 
 import themes from "./themes";
 import { Route, Routes } from "react-router-dom";
@@ -22,8 +22,8 @@ const App = () => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={themes(customization)}>
         <Routes>
-          <Route path="" element={<UserDefault />} />
-          <Route path="/free/*" element={<MainLayout />}>
+          {/* <Route path="" element={<UserDefault />} /> */}
+          <Route path="/*" element={<MainLayout />}>
             <Route path="" element={<Dashboard />} />
             <Route path="user" element={<PeerDefault />} />
             <Route path="block" element={<BlockDefault />} />

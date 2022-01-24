@@ -1,14 +1,10 @@
 import { useSelector } from 'react-redux';
 
-// import DashboardDefault from '../views/dashboard/Default';
-// import MainRoutes from '../routes';
-// material-ui
 import { useTheme } from '@mui/material/styles';
 import { AppBar, Box, Toolbar } from '@mui/material';
 
-// project imports
 import Header from './Header';
-import Sidebar from './Sidebar';
+import Sidebar from './Sidebar/test';
 import { Outlet } from 'react-router-dom';
 
 // ==============================|| MAIN LAYOUT ||============================== //
@@ -38,7 +34,7 @@ const MainLayout = () => {
             </AppBar>
 
             {/* drawer */}
-            <Sidebar drawerOpen={leftDrawerOpened} />
+            <Sidebar />
 
             {/* main content */}
             <div style={{ marginTop: '120px' }}>

@@ -14,9 +14,6 @@ const Login = () => {
     e.preventDefault();
     console.log(PassWord, Email);
     Axios.post("/api/user/Login", user).then((response) => {
-      console.log(4444444444444444444444);
-      console.log(response.data);
-      console.log(3333333333333333333333333);
       if (response.data) {
         alert("성공");
       } else {
@@ -27,7 +24,6 @@ const Login = () => {
 
   const onPWChange = (e) => {
     setPassWord(e.target.value);
-    console.log(PassWord);
   };
 
   const onEmailChange = (e) => {

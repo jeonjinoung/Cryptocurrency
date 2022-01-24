@@ -69,7 +69,6 @@ function getBlocks() {
 }
 
 function getLastBlock() {
-  console.log(22222222222222222);
   return Blocks[Blocks.length - 1];
 }
 
@@ -146,6 +145,20 @@ function isValidTimestamp(newBlock, previousBlock) {
   );
 }
 
+const generatenextBlockWithTransaction = (receiverAddress, amount) => {
+  if (!isValidAddress(receiverAddress)) {
+      throw Error('invalid address');
+  }
+  if (typeof amount !== 'number') {
+      throw Error('invalid amount');
+  }
+  const coinbaseTx = getCoinbaseTransaction(getPublicFromWallet(), getLatestBlock().index + 1);
+  const tx = createTransaction(receiverAddress, amount, getPrivateFromWallet(), unspentTxOuts);
+  const blockData = [coinbaseTx, tx];
+  return generateRawNextBlock(blockData);
+};
+
+
 module.exports = {
   Blocks,
   getLastBlock,
@@ -156,4 +169,5 @@ module.exports = {
   isValidTimestamp,
   hashMatchesDifficulty,
   replaceChain,
+  generatenextBlockWithTransaction
 };
