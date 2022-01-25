@@ -1,4 +1,5 @@
 const express = require("express");
+const { generateRawNextBlock } = require("../../blockchain/blocks");
 const router = express.Router();
 const { getPublicKeyFromWallet } = require("../../wallet/wallet");
 const { getPublicKeyFromWalletSub } = require("../../wallet/WalletSub");
@@ -17,14 +18,18 @@ router.get("/address", (req, res) => {
   }
 });
 
-router.get("/addressSub", (req, res) => {
-  console.log(req.body);
-  const addressSub = getPublicKeyFromWalletSub().toString();
-  if (addressSub != "") {
-    res.send({ addressSub: addressSub });
+router.post("/mineRawBlock", (req, res) => {
+  if (req.body.data == null) {
+    res.send('data 가 없습니다.');
+    return;
+  };
+  
+  const newBlock = generateRawNextBlock(req.body.data);
+  if (newBlock == null) {
+    res.status(400).send('could not generate block');
   } else {
-    res.send("empty address!");
-  }
+    res.send(newBlock);
+  };
 });
 
 module.exports = router;

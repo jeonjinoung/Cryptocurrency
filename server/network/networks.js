@@ -120,6 +120,10 @@ function closeConnection(ws) {
   sockets.splice(sockets.indexOf(ws), 1);
 }
 
+function broadcastLatest() {
+  broadcast(responseLatestMsg());
+}
+
 module.exports = {
   connectToPeers,
   getSockets,
@@ -128,4 +132,5 @@ module.exports = {
   initP2PServer,
   broadcast,
   handleBlockChainResponse,
+  broadcastLatest,
 };

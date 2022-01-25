@@ -11,7 +11,6 @@ const {
 const { addBlock } = require("../../utils/isValidBlock");
 const { broadcast } = require("../networks");
 const { responseLatestMsg } = require("../massage/massage");
-const bcrypt = require("bcrypt");
 
 // =============================================
 //                /api/block
@@ -55,8 +54,6 @@ router.post('/mineTransaction', (req, res) => {
       res.status(400).send(e.message);
   }
 });
-
-
 
 router.get("/version", (req, res) => {
   res.send(getVersion());
