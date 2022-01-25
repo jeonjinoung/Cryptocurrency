@@ -51,6 +51,20 @@ function nextBlock(bodyData) {
   const difficulty = Blocks[Blocks.length - 1].header.difficulty;
   // const nonce = 0
 
+  const getCoinbaseTramsaction = (address, blockIndex) => {
+    const t = new Transaction();
+    const txin = new Txin();
+    txin.signature = "";
+    txin.txOutId = "";
+    txin.txOutIndex = blockIndex;
+
+    t.txIns = [txin];
+    t.txOuts = [new TxOut(address, COINBASE_AMOUNT)];
+    t.id = getTransactionId(t);
+    console.log(t.txIns);
+    return t;
+  };
+
   const header = findBlock(version, index, previousHash, timestamp, merkleRoot, difficulty);
   return new Block(header, bodyData);
 }
