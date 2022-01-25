@@ -2,7 +2,7 @@
 const WebSocket = require("ws");
 const { getLastBlock, getBlocks, replaceChain } = require("../blockchain/blocks");
 const { addBlock } = require("../utils/isValidBlock");
-const { createHash } = require('../utils/hash');
+const { createHash } = require("../utils/hash");
 
 //wsinit
 function initP2PServer(test_port) {
@@ -11,7 +11,7 @@ function initP2PServer(test_port) {
     initConnection(ws);
   });
   server.on("error", () => {
-    console.log("error")
+    console.log("error");
   });
   console.log("Listening webSocket port : " + test_port);
 }
@@ -61,7 +61,7 @@ const MessageType = {
 function initMessageHandler(ws) {
   ws.on("message", (data) => {
     const message = JSON.parse(data);
-    
+
     if (message === null) {
       return;
     }
@@ -108,7 +108,7 @@ function handleBlockChainResponse(message) {
   if (latestReceiveBlock.header.index > latestMyBlock.header.index) {
     if (createHash(latestMyBlock) === latestReceiveBlock.header.previousHash) {
       if (addBlock(latestReceiveBlock)) {
-        console.log("가즈아")
+        console.log("가즈아");
         broadcast(responseLatestMsg());
       } else {
         console.log("Invaild Block!!");

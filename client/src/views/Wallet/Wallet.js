@@ -8,6 +8,7 @@ const Wallet = () => {
 
   const { address } = WalletHeaders;
 
+  console.log(address);
   useEffect(() => {
     Axios.get("/api/address").then((response) => {
       console.log(response);

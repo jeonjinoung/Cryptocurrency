@@ -1,7 +1,7 @@
 const fs = require("fs");
 const merkle = require("merkle");
 const cryptojs = require("crypto-js");
-// const hexToBinary = require('hex-to-binary');
+const hexToBinary = require("hex-to-binary");
 
 const BLOCK_GENERATION_INTERVAL = 2; // 초단위
 const DIFFICULTY_ADJUSTMENT_INTERVAL = 3; // 블록이 생성되는 간격(난이도 간격)
@@ -32,6 +32,37 @@ function createGenesisBlock() {
 
 let Blocks = [createGenesisBlock()];
 
+function replaceChain(newBlocks) {
+  const { broadcast, responseLatestMsg } = require("../network/networks");
+
+  if (isValidChain(newBlocks)) {
+    if (newBlocks.length > Blocks.length || newBlocks.length === Blocks.length) {
+      Blocks = newBlocks;
+      broadcast(responseLatestMsg());
+    }
+  } else {
+    console.log("받은 원장 오류");
+  }
+}
+
+function isValidChain(newBlocks) {
+  const { isValidNewBlock } = require("../utils/isValidBlock");
+
+  if (JSON.stringify(newBlocks[0]) !== JSON.stringify(Blocks[0])) {
+    return false;
+  }
+
+  let tempBlocks = [newBlocks[0]];
+  for (let i = 1; i < newBlocks.length; i++) {
+    if (isValidNewBlock(newBlocks[i], tempBlocks[i - 1])) {
+      tempBlocks.push(newBlocks[i]);
+    } else {
+      return false;
+    }
+  }
+  return true;
+}
+
 function getBlocks() {
   return Blocks;
 }
@@ -48,8 +79,7 @@ function nextBlock(bodyData) {
   const timestamp = parseInt(Date.now() / 1000);
   const tree = merkle("sha256").sync(bodyData);
   const merkleRoot = tree.root() || "0".repeat(64);
-  const difficulty = Blocks[Blocks.length - 1].header.difficulty;
-  // const nonce = 0
+  const difficulty = getDifficulty(getBlocks());
 
   const getCoinbaseTramsaction = (address, blockIndex) => {
     const t = new Transaction();
@@ -67,18 +97,6 @@ function nextBlock(bodyData) {
 
   const header = findBlock(version, index, previousHash, timestamp, merkleRoot, difficulty);
   return new Block(header, bodyData);
-}
-
-function replaceChain(newBlocks) {
-  if (isValidChain(newBlocks)) {
-    // 순환 에러 해결 중
-    if (newBlocks.length > Blocks.length || newBlocks.length === Blocks.length) {
-      Blocks = newBlocks;
-      broadcast(responseLatestMsg());
-    }
-  } else {
-    console.log("받은 원장 오류");
-  }
 }
 
 function hashMatchesDifficulty(hash, difficulty) {
@@ -119,9 +137,6 @@ function getAdjustDifficulty(lastBlock, blocks) {
   const elapsedTime = lastBlock.header.timestamp - prevAdjustmentBlock.header.timestamp;
   const expectedTime = BLOCK_GENERATION_INTERVAL * DIFFICULTY_ADJUSTMENT_INTERVAL;
 
-  // const BLOCK_GENERATION_INTERVAL = 2  // 초단위
-  // const DIFFICULTY_ADJUSTMENT_INTERVAL = 3 // 블록이 생성되는 간격(난이도 간격)
-
   if (expectedTime / 2 > elapsedTime) {
     return prevAdjustmentBlock.header.difficulty + 1;
   } else if (expectedTime * 2 < elapsedTime) {
@@ -135,20 +150,11 @@ function getCurrentTimestamp() {
   return Math.round(new Date().getTime() / 1000);
 }
 
-function isValidTimestamp(newBlock, prevBlock) {
-  /* 최초의 블록은 검색예외 보존 */
-  if (prevBlock.header.timestamp === 1231006505) {
-    return true;
-  }
-
-  if (newBlock.header.timestamp - prevBlock.header.timestamp > 60) {
-    return false;
-  }
-
-  if (newBlock.header.timestamp - getCurrentTimestamp() > 60) {
-    return false;
-  }
-  return true;
+function isValidTimestamp(newBlock, previousBlock) {
+  return (
+    previousBlock.header.timestamp - 60 < newBlock.header.timestamp &&
+    newBlock.header.timestamp - 60 < getCurrentTimestamp()
+  );
 }
 
 module.exports = {
@@ -157,8 +163,8 @@ module.exports = {
   nextBlock,
   getBlocks,
   getVersion,
-  replaceChain,
   getDifficulty,
   isValidTimestamp,
   hashMatchesDifficulty,
+  replaceChain,
 };
