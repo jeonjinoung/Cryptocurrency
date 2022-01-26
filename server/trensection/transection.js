@@ -71,22 +71,23 @@ const signTxIn = (transaction, txInIndex, privateKey, aUnspentTxOuts) => {
     txIn.txOutIndex,
     aUnspentTxOuts
   );
-  console.log("예정");
+  console.log("----------- signTxIn ---------------");
   console.log(referencedUnspentTxOut);
-  console.log("예정");
+  console.log("----------- signTxIn ---------------");
 
   if (referencedUnspentTxOut === null || referencedUnspentTxOut === undefined) {
     throw Error("Couldn't find the referenced uTxOut, not signing");
   }
   const referencedAddress = referencedUnspentTxOut.address;
-  console.log(referencedAddress);
   if (getPublicKey(privateKey) !== referencedAddress) {
     console.log("????");
     return false;
   }
   const key = ec.keyFromPrivate(privateKey, "hex");
   const signature = toHexString(key.sign(dataToSign).toDER());
+  console.log("signature");
   console.log(signature);
+  console.log("signature");
   return signature;
 };
 

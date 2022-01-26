@@ -126,7 +126,7 @@ function broadcast(message) {
 
 const broadcastLatest = () => broadcast(responseLatestMsg());
 
-const broadcastMempool = () => sendMessageToAll(returnMempool());
+const broadcastMempool = () => broadcast(returnMempool());
 
 function initErrorHandler(ws) {
   ws.on("close", () => {
@@ -165,4 +165,5 @@ module.exports = {
   broadcast,
   handleBlockChainResponse,
   broadcastLatest,
+  broadcastMempool,
 };

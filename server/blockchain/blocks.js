@@ -21,10 +21,10 @@ function getVersion() {
 const genesisTx = {
   txIns: [{'signature': '', 'txOutId': '', 'txOutIndex': 0}],
   txOuts: [{
-      'address': '04f418acec127da1708ee6ec32822fa21a1b643a2dec149a5329a50b19e1d3cffb680a4beed92349e6e0da1d1a1c8287e530ed9f116545cf68076800576d823460',
+      'address': '04b24735ba58b92f70aa525c7499853c1da747a6cd8e6db47fd59f7c539d37a3443485422dfd1b69796c27b826f1ceebe1d3bf603e5a4de2f9fb156279bc23b653',
       'amount': 50
   }],
-  id: '8aae310b2b7f350cc658503bac01fd1c4fd3e3a7ed475a19aaffd711db04c47a'
+  id: '38e9ca13ddeec88c34e2dcf7b2cc9bf68a388a032538934345ade976d2f61bf8'
 };
 
 // 기존의 hash 값 안들어감
@@ -244,7 +244,13 @@ const getUTxOutList = () => _.cloneDeep(unspentTxOuts);
 const getAccountBalance = () => getBalance(getPublicKeyFromWallet(), unspentTxOuts);
 
 const sendTx = (address, amount) => {
+  const { broadcastMempool } = require("../network/networks");
   // 여기서 전달 받은 address 인자는 받는 주소
+  console.log("getUTxOutList() 가 이상한가");
+  console.log(getUTxOutList());
+  console.log("getUTxOutList() 가 이상한가");
+  console.log(getMempool());
+  console.log("getMempool() 가 이상한가....");
   const tx = createTx(
     address,
     amount,
@@ -253,7 +259,7 @@ const sendTx = (address, amount) => {
     getMempool()
   );
   addToMempool(tx, getUTxOutList());
-  // broadcastMempool();
+  broadcastMempool();
   return tx;
 };
 

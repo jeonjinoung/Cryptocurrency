@@ -46,10 +46,11 @@ function getPublicKeyFromWallet() {
 };
 
 const getBalance = (address, uTxOuts) => {
-  console.log(11111111111111111111);
+  console.log("----------- 1 . 검색할 주소 값 -----------");
   console.log(address);
+  console.log("----------- 2 . unspentTxOuts 값 -----------");
   console.log(uTxOuts);
-  console.log(222222222222222222222);
+  console.log("----------- 출력완료 -----------");
 
   return _(uTxOuts)
     .filter(uTxO => uTxO.address === address)
@@ -58,10 +59,11 @@ const getBalance = (address, uTxOuts) => {
 };
 
 const findAmountInUTxOuts = (amountNeeded, myUTxOuts) => {
-  console.log(333333333333333333333333333333);
+  console.log("----------- 3. 금액과 memPool -----------");
   console.log(amountNeeded);
   console.log(myUTxOuts);
-  console.log(333333333333333333333333333333);
+  console.log("----------- 받은 인자 -----------");
+
   let currentAmount = 0;
   const includedUTxOuts = [];
   for (const myUTxOut of myUTxOuts) {
@@ -116,39 +118,43 @@ const createTx = (receiverAddress, amount, privateKey, uTxOutList, memPool) => {
   console.log(uTxOutList);
   const myUTxOuts = uTxOutList.filter(uTxO => uTxO.address === myAddress);
 
-  console.log(111111111111111);
+  console.log("----------- 1. 내 거래 찾기 myUTxOuts -----------");
   console.log(myUTxOuts);
   const filteredUTxOuts = filterUTxOutsFromMempool(myUTxOuts, memPool);
 
-  console.log(222222222222222222222222);
+  console.log("----------- 2. memPool 에서 찾음 (금액과 memPool 에서의 찾은 값 전달) -----------");
   console.log(filteredUTxOuts);
   
   const { includedUTxOuts, leftOverAmount } = findAmountInUTxOuts(
     amount,
     filteredUTxOuts
   );
-  console.log("반환!!!!!!!");
+  console.log("----------- 4. 정산 후 반환된 2가지의 값 -----------");
   console.log(includedUTxOuts);
   console.log(leftOverAmount);
-  console.log("반환!!!!!!!");
 
+  console.log("----------- 5. txIn 의 이전 OutPut 참조 (txIn) -----------");
   // txIn 의 이전 OutPut 참조
   const toUnsignedTxIn = (uTxOut) => {
     const txIn = new TxIn();
     txIn.txOutId = uTxOut.txOutId;
     txIn.txOutIndex = uTxOut.txOutIndex;
+
+    console.log(txIn);
     return txIn;
   };
+  // console.log("----------- 5. txIn 의 이전 OutPut 참조 (txOutId) -----------");
+  console.log(toUnsignedTxIn.toUnsignedTxIn);
+
+  // console.log("----------- 6. txIn 의 이전 OutPut 참조 (txOutIndex) -----------");
+  // console.log(toUnsignedTxIn);
 
   // 서명 전
   const unsignedTxIns = includedUTxOuts.map(toUnsignedTxIn);
-  console.log("서명 전!!!!");
+  console.log("----------- 서명 전!!!! -----------");
   console.log(unsignedTxIns);
-  console.log("서명 전!!!!");
+  console.log("----------- 서명 전!!!! -----------");
 
-  console.log("없나?");
-  console.log(receiverAddress);
-  console.log("없나?");
   const tx = new Transaction();
   tx.txIns = unsignedTxIns;
   // 받는 주소 - 나의 주소 - 보내는 금액 - 남은금액
@@ -156,16 +162,18 @@ const createTx = (receiverAddress, amount, privateKey, uTxOutList, memPool) => {
   // 위의 createTxOuts 로 반환되는 것들은 보낸이 받는이의 2개의 배열 Output 들
   tx.id = getTransactionId(tx);
   
-  console.log("계산 완료 ~~~");
+  console.log("----------- 서명 전 tx!! -----------");
   console.log(tx);
-  console.log("계산 완료 ~~~");
+  console.log("----------- 서명 전 tx!! -----------");
 
   console.log("signTxIn - 이곳예정");
   tx.txIns = tx.txIns.map((txIn, index) => {
     txIn.signature = signTxIn(tx, index, privateKey, uTxOutList);
     return txIn;
   });
-  console.log("signTxIn - 이곳예정");
+  console.log("----------- 서명 tx 완료!! -----------");
+  console.log(tx);
+  console.log("----------- 서명 tx 완료!! -----------");
 
   return tx;
 };

@@ -49,7 +49,7 @@ router.post("/addtransactions", (req, res) => {
     if (address === undefined || amount === undefined) {
       throw Error("Please specify and address and an amount");
     } else {
-      console.log(222222);
+      console.log("----------- 0. 시작 -----------");
       const resPonse = sendTx(address, amount);
       res.send(resPonse);
     }
