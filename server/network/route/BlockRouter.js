@@ -4,14 +4,10 @@ const Block = require("../../models/block");
 const {
   getBlocks,
   getVersion,
-  nextBlock,
   getLastBlock,
-  generatenextBlockWithTransaction
+  // generatenextBlockWithTransaction,
+  createNewBlock
 } = require("../../blockchain/blocks");
-const { addBlock } = require("../../utils/isValidBlock");
-const { broadcast } = require("../networks");
-const { responseLatestMsg } = require("../massage/massage");
-const bcrypt = require("bcrypt");
 
 // =============================================
 //                /api/block
@@ -26,37 +22,19 @@ router.get("/lastBlock", (req, res) => {
 });
 
 router.post("/mineBlock", async (req, res) => {
-  const data = req.body.data || [];
-  const block = nextBlock(data);
-  addBlock(block);
-  console.log(block)
-  broadcast(responseLatestMsg());
-  res.send(block);
-  const { previousHash, timestamp, merkleRoot, difficulty, nonce } =
-    block.header;
-  await Block.create({
-    previousHash,
-    timestamp,
-    merkleRoot,
-    difficulty,
-    nonce,
-    body: block.body[0],
-  });
+  const newBlock = createNewBlock();
+  res.send(newBlock);
 });
 
-router.post('/mineTransaction', (req, res) => {
-  const address = req.body.address;
-  const amount = req.body.amount;
-  try {
-      const resp = generatenextBlockWithTransaction(address, amount);
-      res.send(resp);
-  } catch (e) {
-      console.log(e.message);
-      res.status(400).send(e.message);
+router.get("/blocks/:hash", (req, res) => {
+  const { hash } = req.params;
+  const block = _.find(getBlocks(), { hash });
+  if (block === undefined) {
+    res.status(400).send("Block not found");
+  } else {
+    res.send(block);
   }
 });
-
-
 
 router.get("/version", (req, res) => {
   res.send(getVersion());
