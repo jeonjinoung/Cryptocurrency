@@ -13,17 +13,17 @@ function getVersion() {
   const package = fs.readFileSync("package.json");
   return JSON.parse(package).version;
 }
-
+//최초의 블럭 생성
 function createGenesisBlock() {
   const version = getVersion()
-  const index = 0
+  const index = 0 
   const previousHash = '0'.repeat(64)
   const timestamp = 1231006505  // 2009/01/03 6:15pm (UTC)
   const body = ['The Times 03/Jan/2009 Chancellor on brink of second bailout for banks']
   const tree = merkle('sha256').sync(body)
   const merkleRoot = tree.root() || '0'.repeat(64)
-  const difficulty = 1
-  const nonce = 0
+  const difficulty = 1 // O
+  const nonce = 0 // O
 
   const header = new BlockHeader(version, index, previousHash, timestamp, merkleRoot, difficulty, nonce)
 
@@ -63,7 +63,7 @@ function isValidChain(newBlocks) {
   };
   return true;
 };
-
+//getBlocks이지만 사실상 getBlockchain이다.
 function getBlocks() {
   return Blocks;
 }
