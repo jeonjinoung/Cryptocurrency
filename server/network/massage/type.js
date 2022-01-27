@@ -4,9 +4,4 @@ const MessageType = {
   RESPONSE_BLOCKCHAIN: 2,
 };
 
-const MemPoolMessageType = {
-  REQUEST_MEMPOOL : 3,
-  MEMPOOL_RESPONSE : 4,
-}
-
-module.exports = { MessageType, MemPoolMessageType };
+module.exports = { MessageType };

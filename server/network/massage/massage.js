@@ -2,7 +2,7 @@ const {
   getLastBlock,
   getBlocks,
 } = require("../../blockchain/blocks");
-const { MessageType, MemPoolMessageType } = require("./type");
+const { MessageType } = require("./type");
 
 function responseLatestMsg() {
   return {
@@ -32,25 +32,9 @@ function queryLatestMsg() {
   };
 }
 
-function mempoolResponse(data) {
-  return {
-    type: MemPoolMessageType.MEMPOOL_RESPONSE,
-    data
-  };
-};
-
-function getAllMempool() {
-  return {
-    type: MemPoolMessageType.REQUEST_MEMPOOL,
-    data: null
-  };
-};
-
 module.exports = {
   responseLatestMsg,
   responseAllChainMsg,
   queryAllMsg,
-  queryLatestMsg,
-  mempoolResponse,
-  getAllMempool
+  queryLatestMsg
 }
