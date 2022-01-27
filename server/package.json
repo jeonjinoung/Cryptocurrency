@@ -31,7 +31,7 @@
     "start": "node --trace-deprecation network/main.js",
     "backend": "nodemon network/main.js",
     "backend-peer": "export P2P_PORT=7001 && export HTTP_PORT=4001 && nodemon network/main.js",
-    "backend-peer2": "export P2P_PORT=7002 && export HTTP_PORT=4002 && nodemon network/main.js",
+    "backend-peer2": "export P2P_PORT=7002 && export PRIVATE_KEY=test && export HTTP_PORT=4002 && nodemon network/main.js",
     "backend-peer3": "export P2P_PORT=7003 && export HTTP_PORT=4003 && nodemon network/main.js",
     "backend-all": "concurrently \"npm run backend\" \"npm run backend-peer\" \"npm run backend-peer2\" \"npm run backend-peer3\"",
     "dev": "concurrently \"npm run backend\" \"npm run start --prefix ../client\"",

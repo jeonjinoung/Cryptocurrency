@@ -17,6 +17,15 @@ const isTxValidForPool = (tx, mempool) => {
 
   const isTxInAlreadyInPool = (txIns, txIn) => {
     return _.find(txIns, txInInPool => {
+      console.log("흠");
+      console.log(txIn);
+      console.log("흠");
+      console.log(txInInPool);
+      console.log("흠");
+      console.log(txIn.txOutIndex === txInInPool.txOutIndex &&
+        txIn.txOutId === txInInPool.txOutId);
+      console.log("흠");
+
       return (
         txIn.txOutIndex === txInInPool.txOutIndex &&
         txIn.txOutId === txInInPool.txOutId
@@ -61,6 +70,7 @@ const addToMempool = (tx, uTxOutList) => {
   if (!validateTx(tx, uTxOutList)) {
     throw Error("This tx is invalid. Will not add it to pool");
   } else if (!isTxValidForPool(tx, mempool)) {
+    console.log(isTxValidForPool(tx, mempool));
     throw Error("This tx is not valid for the pool. Will not add it.");
   }
   mempool.push(tx);

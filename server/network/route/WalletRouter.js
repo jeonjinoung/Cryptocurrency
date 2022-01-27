@@ -1,5 +1,5 @@
 const express = require("express");
-const { generateRawNextBlock, sendTx, getAccountBalance, getBlocks, getUTxOutList } = require("../../blockchain/blocks");
+const { sendTx, getAccountBalance, getBlocks, getUTxOutList } = require("../../blockchain/blocks");
 const { getMempool } = require("../../trensection/memPool");
 const router = express.Router();
 const { getPublicKeyFromWallet, getBalance } = require("../../wallet/wallet");

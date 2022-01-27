@@ -35,6 +35,7 @@ function queryLatestMsg() {
 function mempoolResponse(data) {
   return {
     type: MemPoolMessageType.MEMPOOL_RESPONSE,
+    // 추가 해보자
     data
   };
 };

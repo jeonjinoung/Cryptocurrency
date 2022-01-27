@@ -86,7 +86,14 @@ function initMessageHandler(ws) {
 function handleBlockChainResponse(message) {
   const { addBlock } = require("../utils/isValidBlock");
 
-  const receiveBlocks = JSON.parse(message.data);
+  const test = message.data;
+  console.log(3333333333333333333333);
+  console.log(message);
+  console.log(message.body);
+  console.log(3333333333333333333333);
+
+  // message.data??????????????????????????
+  const receiveBlocks = JSON.parse(message);
   const latestReceiveBlock = receiveBlocks[receiveBlocks.length - 1];
   const latestMyBlock = getLastBlock();
 
