@@ -1,11 +1,9 @@
 const WebSocket = require("ws");
-const {
-  getLastBlock,
-  replaceChain,
-} = require("../blockchain/blocks");
+const { getLastBlock, replaceChain, handleIncomingTx } = require("../blockchain/blocks");
+const { getMempool } = require("../trensection/memPool");
 const { createHash } = require("../utils/hash");
-const { responseLatestMsg, responseAllChainMsg, queryAllMsg, queryLatestMsg } = require("./massage/massage");
-const { MessageType } = require("./massage/type");
+const { responseLatestMsg, responseAllChainMsg, queryAllMsg, queryLatestMsg, getAllMempool, mempoolResponse } = require("./massage/massage");
+const { MessageType, MemPoolMessageType } = require("./massage/type");
 
 function initP2PServer(test_port) {
   const server = new WebSocket.Server({ port: test_port });
@@ -20,39 +18,24 @@ function initP2PServer(test_port) {
 
 let sockets = [];
 
+function getSockets() {
+  return sockets;
+}
+
 function initConnection(ws) {
   sockets.push(ws);
   initMessageHandler(ws);
   initErrorHandler(ws);
   write(ws, queryLatestMsg());
-}
 
-function getSockets() {
-  return sockets;
-}
-
-function write(ws, message) {
-  ws.send(JSON.stringify(message));
-}
-
-function broadcast(message) {
-  sockets.forEach((socket) => {
-    write(socket, message);
-  });
-}
-
-function connectToPeers(newPeers) {
-  newPeers.forEach((peer) => {
-    const ws = new WebSocket(peer);
-    ws.on("open", () => {
-      console.log("open");
-      initConnection(ws);
-    });
-    ws.on("error", (errorType) => {
-      console.log("connetion Failed!" + errorType);
-      return false;
-    });
-  });
+  setTimeout(() => {
+    broadcast(getAllMempool()); // changed line
+  }, 1000);
+  setInterval(() => {
+    if (sockets.includes(ws)) {
+      write(ws, "");
+    }
+  }, 1000);
 }
 
 function initMessageHandler(ws) {
@@ -71,7 +54,30 @@ function initMessageHandler(ws) {
         write(ws, responseAllChainMsg());
         break;
       case MessageType.RESPONSE_BLOCKCHAIN:
-        handleBlockChainResponse(message);
+        // ??message.body;??massage???
+        const receivedBlocks = message.data;
+        if (receivedBlocks === null) {
+          break;
+        }
+        handleBlockChainResponse(receivedBlocks);
+        break;
+      case MemPoolMessageType.REQUEST_MEMPOOL:
+        write(ws, returnMempool());
+        break;
+      case MemPoolMessageType.MEMPOOL_RESPONSE:
+        // ??message.data;??
+        const receivedTxs = message.data;
+        if (receivedTxs === null) {
+          return;
+        }
+        receivedTxs.forEach(tx => {
+          try {
+            handleIncomingTx(tx);
+            broadcastMempool();
+          } catch (e) {
+            console.log(e);
+          }
+        });
         break;
     }
   });
@@ -106,6 +112,22 @@ function handleBlockChainResponse(message) {
   }
 }
 
+const returnMempool = () => mempoolResponse(getMempool());
+
+function write(ws, message) {
+  ws.send(JSON.stringify(message));
+}
+
+function broadcast(message) {
+  sockets.forEach((socket) => {
+    write(socket, message);
+  });
+}
+
+const broadcastLatest = () => broadcast(responseLatestMsg());
+
+const broadcastMempool = () => sendMessageToAll(returnMempool());
+
 function initErrorHandler(ws) {
   ws.on("close", () => {
     closeConnection(ws);
@@ -120,6 +142,20 @@ function closeConnection(ws) {
   sockets.splice(sockets.indexOf(ws), 1);
 }
 
+function connectToPeers(newPeers) {
+  newPeers.forEach((peer) => {
+    const ws = new WebSocket(peer);
+    ws.on("open", () => {
+      console.log("open");
+      initConnection(ws);
+    });
+    ws.on("error", (errorType) => {
+      console.log("connetion Failed!" + errorType);
+      return false;
+    });
+  });
+}
+
 module.exports = {
   connectToPeers,
   getSockets,
@@ -128,4 +164,5 @@ module.exports = {
   initP2PServer,
   broadcast,
   handleBlockChainResponse,
+  broadcastLatest,
 };

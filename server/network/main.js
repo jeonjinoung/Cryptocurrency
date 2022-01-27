@@ -4,6 +4,7 @@ const { sequelize } = require("../models/index");
 const passport = require("passport");
 const passportConfig = require("../passport");
 const app = express();
+const morgan = require("morgan")
 const { initP2PServer } = require("./networks");
 const UserRouter = require('./route/UserRouter');
 const PeerRouter = require('./route/PeerRouter');
@@ -23,10 +24,10 @@ function initHttpServer() {
     .catch((err) => {
       console.error(err);
     });
-
   app.use(express.static(path.join(__dirname, "public")));
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
+  app.use(morgan("combined"));
   app.use(passport.initialize());
 
   app.use("/api/user", UserRouter);
