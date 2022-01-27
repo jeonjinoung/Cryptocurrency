@@ -22,3 +22,14 @@ module.exports = class Address extends Sequelize.Model {
     );
   }
 };
+
+/*
+  if (addressSub != "") {
+    res.send({ addressSub: addressSub });
+  } else {
+    res.send("empty address!");
+  } await Address.create({
+    address:addressSub
+  })
+});
+ */

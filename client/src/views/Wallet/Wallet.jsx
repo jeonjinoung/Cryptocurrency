@@ -7,6 +7,7 @@ const AddressDefault = () => {
   const onSubmitAddress = (e) => {
     e.preventDefault();
     Axios.get("/api/wallet/address").then((response) => {
+      console.log(Address)
       if (response.data) {
         setAddress(response.data.address);
       } else {

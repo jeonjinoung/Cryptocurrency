@@ -9,27 +9,40 @@ const Address = require("../../models/address");
 // =============================================
 
 router.get("/address", async (req, res) => {
-  console.log(req.body);
   const address = getPublicKeyFromWallet().toString();
-  if (address != "") {
-    res.send({ address: address });
-  } else {
-    res.send("empty address!");
-  } await Address.create({
-    address:address
-  })
-});
+  try{
+    const key = await Address.findOne({where:{address}})
+    if (key){
+      return res.redirect('/""/Dashboard')
+    } else if (address != "") {
+      res.send({ address: address });
+    } else if(address = ""){
+      res.send("empty address!");
+    }  await Address.create({
+      address:address
+    })
+  } 
+finally{
+  
+}})
 
 router.get("/addressSub", async (req, res) => {
-  console.log(req.body);
   const addressSub = getPublicKeyFromWalletSub().toString();
-  if (addressSub != "") {
-    res.send({ addressSub: addressSub });
-  } else {
-    res.send("empty address!");
-  } await Address.create({
-    address:addressSub
-  })
+  try{
+    const keySub = await Address.findOne({where:{address:addressSub}})
+    if (keySub){
+      return res.redirect('/""/Dashboard')
+    } else if (addressSub != "") {
+      res.send({ addressSub: addressSub });
+    } else {
+      res.send("empty address!");
+    } await Address.create({
+      address:addressSub
+    })
+  }
+  finally{
+
+  }
 });
 
 module.exports = router;

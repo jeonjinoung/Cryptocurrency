@@ -1,8 +1,6 @@
 const CryptoJS = require('crypto-js');
 const ecdsa = require('elliptic');
-
 const ec = new ecdsa.ec('secp256k1');
-
 const COINBASE_AMOUNT = 50;
 
 class UnspentTxOut {
@@ -17,7 +15,7 @@ class UnspentTxOut {
 class TxIn{
     constructor(txOutId, txOutIndex, signature){
         this.txOutId = txOutId;
-        this.txOutIndex = txOutId;
+        this.txOutIndex = txOutIndex;
         this.signature = signature;
     }
 }
@@ -44,9 +42,23 @@ const getTransactionId = (transaction) => {
     const txOutContent = transaction.txOuts
        .map((txOut) => txOut.address + txOut.amount)
        .reduce((a, b) => a + b, "");
- 
        return CryptoJS.SHA256(txInContent + txOutContent).toString();
  };
+
+ 
+//Transaction signatures
+const signTxIn = (transaction, txInIndex, privateKey, aUnspentTxOuts) => {
+    const txIn = transaction.txIns[txInIndex];
+    const dataToSign = transaction.id;
+    const referencedUnspentTxOut = findUnspentTxOut(txIn.txOutId, txIn.txOutIndex, aUnspentTxOuts);
+    const referencedAddress = referencedUnspentTxOut.address;
+    const key = ec.keyFromPrivate(privateKey, 'hex');
+    const signature = toHexString(key.sign(dataToSign).toDER());
+    return signature;
+};
+
+let aUnspentTxOuts = [];
+
 
  const validateTransaction = (transaction, aUnspentTxOuts) => {
 
@@ -179,16 +191,6 @@ const getCoinbaseTransaction = (address, blockIndex) => {
     return t;
 };
 
-//Transaction signatures
-const signTxIn = (transaction, txInIndex, privateKey, aUnspentTxOuts) => {
-    const txIn = transaction.txIns[txInIndex];
-    const dataToSign = transaction.id;
-    const referencedUnspentTxOut = findUnspentTxOut(txIn.txOutId, txIn.txOutIndex, aUnspentTxOuts);
-    const referencedAddress = referencedUnspentTxOut.address;
-    const key = ec.keyFromPrivate(privateKey, 'hex');
-    const signature = toHexString(key.sign(dataToSign).toDER());
-    return signature;
-    };
 
 const updateUnspentTxOuts = (aTransactions, aUnspentTxOuts) => {
         const newUnspentTxOuts = aTransactions
