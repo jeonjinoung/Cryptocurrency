@@ -1,0 +1,42 @@
+{
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.1",
+    "concurrently": "^7.0.0",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.1.1",
+    "elliptic": "^6.5.4",
+    "eslint-config-airbnb": "^19.0.4",
+    "express": "^4.17.2",
+    "express-session": "^1.17.2",
+    "fs": "^0.0.1-security",
+    "hex-to-binary": "^1.0.1",
+    "merkle": "^0.6.0",
+    "morgan": "^1.10.0",
+    "mysql2": "^2.3.3",
+    "nodejs-websocket": "^1.7.2",
+    "passport": "^0.5.2",
+    "passport-kakao": "^1.0.1",
+    "passport-local": "^1.0.0",
+    "random": "^3.0.6",
+    "sequelize": "^6.13.0",
+    "sequelize-cli": "^6.3.0",
+    "ws": "^8.4.0"
+  },
+  "name": "basic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "node --trace-deprecation network/main.js",
+    "backend": "nodemon network/main.js",
+    "dev": "concurrently \"npm run backend\" \"npm run start --prefix ../../client\"",
+    "work": "node scripts/average-work"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.6.0",
+    "nodemon": "^2.0.15"
+  }
+}
