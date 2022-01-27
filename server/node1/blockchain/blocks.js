@@ -7,7 +7,7 @@ const BLOCK_GENERATION_INTERVAL = 2  // 초단위
 const DIFFICULTY_ADJUSTMENT_INTERVAL = 3 // 블록이 생성되는 간격(난이도 간격)
 
 const { Block, BlockHeader } = require("./blockclass");
-const { createHash } = require("../utils/hash");
+const { createHash } = require("../../node1/utils/hash");
 
 function getVersion() {
   const package = fs.readFileSync("package.json");
@@ -47,7 +47,7 @@ function replaceChain(newBlocks) {
 }
 
 function isValidChain(newBlocks) {
-  const { isValidNewBlock } = require("../utils/isValidBlock");
+  const { isValidNewBlock } = require("../../utils/isValidBlock");
 
   if(JSON.stringify(newBlocks[0]) !== JSON.stringify(Blocks[0])) {
     return false;
