@@ -20,12 +20,13 @@ function createGenesisBlock() {
   const previousHash = '0'.repeat(64)
   const timestamp = 1231006505  // 2009/01/03 6:15pm (UTC)
   const body = ['The Times 03/Jan/2009 Chancellor on brink of second bailout for banks']
+  const transaction = ""
   const tree = merkle('sha256').sync(body)
   const merkleRoot = tree.root() || '0'.repeat(64)
   const difficulty = 1 // O
   const nonce = 0 // O
 
-  const header = new BlockHeader(version, index, previousHash, timestamp, merkleRoot, difficulty, nonce)
+  const header = new BlockHeader(version, index, previousHash, timestamp, transaction, merkleRoot, difficulty, nonce)
 
   return new Block(header, body)
 }

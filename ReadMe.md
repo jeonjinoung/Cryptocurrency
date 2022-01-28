@@ -110,4 +110,5 @@ const genesisBlock: Block = new Block(
 차이점은 버전을 가져오는것과 머클루트를 선언하는것이 naivecoin에는 없었다.
 
 
-
+## 최초의 트랜잭션 ##
+transaction을 보니 서로 크게 다른게 없었다. 그렇다면 이제 블럭부터 참고하여 트랜잭션을 넣어보자.

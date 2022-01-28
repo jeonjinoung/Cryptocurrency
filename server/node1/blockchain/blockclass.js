@@ -1,3 +1,4 @@
+const { Transaction } = require('../trensection/transection')
 class Block {
   constructor(header, body) {
     this.header = header
@@ -6,11 +7,12 @@ class Block {
 }
 
 class BlockHeader {
-  constructor (version, index, previousHash, timestamp, merkleRoot, difficulty, nonce) {
+  constructor (version, index, transection, previousHash, timestamp, merkleRoot, difficulty, nonce) {
     this.version = version
     this.index = index
     this.previousHash = previousHash
     this.timestamp = timestamp
+    this.transection = transection
     this.merkleRoot = merkleRoot
     this.difficulty = difficulty
     this.nonce = nonce

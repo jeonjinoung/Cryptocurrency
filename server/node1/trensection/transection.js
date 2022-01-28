@@ -1,35 +1,14 @@
-const ecdsa = require("elliptic");
-const ec = new ecdsa.ec("secp256k1");
 const CryptoJS = require("crypto-js"); 
+const ecdsa = require("elliptic");
 const _ = require("lodash");
+const ec = new ecdsa.ec("secp256k1");
+//추가로 해쉬값??선언??
 const { toHexString } = require("./utils");
 
 // 코인베이스 아웃풋의 양
 const COINBASE_AMOUNT = 50;
 
-class TxOut {
-  constructor(address, amount) {
-    this.address = address; 
-    this.amount = amount; 
-  }
-}
-
-class TxIn {
-  constructor(txOutId, txOutIndex, signature) {
-    this.txOutId = txOutId;
-    this.txOutIndex = txOutIndex;
-    this.signature = signature;
-  }
-}
-
-class Transaction {
-  constructor(id, txIns, txOuts) {
-    this.id = id;
-    this.txIns = txIns;
-    this.txOuts = txOuts;
-  }
-}
-
+//
 class UnspentTxOut {
   constructor(txOutId, txOutIndex, address, amount) {
     this.txOutId = txOutId;
@@ -38,6 +17,30 @@ class UnspentTxOut {
     this.amount = amount;
   }
 }
+//트랜잭션 아웃풋 ->주소와 코인의 양
+class TxOut {
+  constructor(address, amount) {
+    this.address = address; 
+    this.amount = amount; 
+  }
+}
+//트랜잭션 인풋(txIn)은 코인이 어디로부터 왔는지에 대한 정보를 제공해요.
+class TxIn {
+  constructor(txOutId, txOutIndex, signature) {
+    this.txOutId = txOutId;
+    this.txOutIndex = txOutIndex;
+    this.signature = signature;
+  }
+}
+//트랜잭션의 구성
+class Transaction {
+  constructor(id, txIns, txOuts) {
+    this.id = id;
+    this.txIns = txIns;
+    this.txOuts = txOuts;
+  }
+}
+
 
 // + 유효한 트랜잭션 ID
 const getTransactionId = (transaction) => {
@@ -79,6 +82,7 @@ const signTxIn = (transaction, txInIndex, privateKey, aUnspentTxOuts) => {
     throw Error("Couldn't find the referenced uTxOut, not signing");
   }
   const referencedAddress = referencedUnspentTxOut.address;
+
   console.log(referencedAddress);
   if (getPublicKey(privateKey) !== referencedAddress) {
     console.log("????");
@@ -216,6 +220,7 @@ const validateTxIn = (txIn, tx, uTxOutList) => {
 const getAmountInTxIn = (txIn, uTxOutList) => findUnspentTxOut(txIn.txOutId, txIn.txOutIndex, uTxOutList).amount;
 
 // 유효성 검사
+//validateCoinbaseTx
 const validateTx = (tx, uTxOutList) => {
   // 트랜잭션 타입 확인
   if (!isTxStructureValid(tx)) {
@@ -280,7 +285,7 @@ const validateCoinbaseTx = (tx, blockIndex) => {
   }
 };
 
-// Coinbase transaction
+//get Coinbase transaction
 const createCoinbaseTx = (address, blockIndex) => {
   const tx = new Transaction();
   const txIn = new TxIn();
