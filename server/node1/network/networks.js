@@ -38,33 +38,6 @@ function initConnection(ws) {
   }, 1000);
 }
 
-<<<<<<< HEAD:server/node1/network/networks.js
-function write(ws, message) {
-  ws.send(JSON.stringify(message));
-}
-
-function broadcast(message) {
-  sockets.forEach((socket) => {
-    write(socket, message);
-  });
-}
-
-function connectToPeers(newPeers) {
-  newPeers.forEach((peer) => {
-    const ws = new WebSocket(peer);
-    ws.on("open", () => {
-      console.log("open");
-      initConnection(ws);
-    });
-    ws.on("error", (errorType) => {
-      console.log("connetion Failed!" + errorType);
-      return false;
-    });
-  });
-}
-
-=======
->>>>>>> 2a16bb8a08340896e4d17e1c9a99ae0e915ff9ad:server/network/networks.js
 function initMessageHandler(ws) {
   ws.on("message", (data) => {
     const message = JSON.parse(data);
@@ -139,8 +112,6 @@ function handleBlockChainResponse(message) {
   }
 }
 
-<<<<<<< HEAD:server/node1/network/networks.js
-=======
 const returnMempool = () => mempoolResponse(getMempool());
 
 function write(ws, message) {
@@ -157,7 +128,6 @@ const broadcastLatest = () => broadcast(responseLatestMsg());
 
 const broadcastMempool = () => sendMessageToAll(returnMempool());
 
->>>>>>> 2a16bb8a08340896e4d17e1c9a99ae0e915ff9ad:server/network/networks.js
 function initErrorHandler(ws) {
   ws.on("close", () => {
     closeConnection(ws);
@@ -194,8 +164,5 @@ module.exports = {
   initP2PServer,
   broadcast,
   handleBlockChainResponse,
-<<<<<<< HEAD:server/node1/network/networks.js
-=======
   broadcastLatest,
->>>>>>> 2a16bb8a08340896e4d17e1c9a99ae0e915ff9ad:server/network/networks.js
 };
