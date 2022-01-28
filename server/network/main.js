@@ -35,6 +35,7 @@ function initHttpServer() {
   });
 
   app.post("/api/mineBlock", (req, res) => {
+    console.log(req.body.data);
     const data = req.body.data || [];
     const block = nextBlock(data);
     addBlock(block);
