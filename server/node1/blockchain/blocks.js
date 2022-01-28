@@ -264,7 +264,8 @@ const handleIncomingTx = tx => {
 module.exports = {
   getLastBlock,
   getBlocks,
-  createNewBlock,  
+  createNewBlock,
+  createNewRawBlock,  
   getVersion,
   addBlockToChain,
   isValidTimestamp,
