@@ -4,7 +4,7 @@ const Block = require("../../models/block");
 const {
   getBlocks,
   getVersion,
-  nextBlock,
+  createNewRawBlock,
   getLastBlock,
 } = require("../../blockchain/blocks");
 const { addBlock } = require("../../utils/isValidBlock");
@@ -21,12 +21,13 @@ router.get("/blocks", (req, res) => {
 });
 
 router.get("/lastBlock", (req, res) => {
+  console.log()
   res.send(getLastBlock());
 });
 
 router.post("/mineBlock", async (req, res) => {
   const data = req.body.data || [];
-  const block = nextBlock(data);
+  const block = createNewRawBlock(data);
   addBlock(block);
   broadcast(responseLatestMsg());
   res.send(block);
