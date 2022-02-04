@@ -2,6 +2,7 @@ const fs = require("fs");
 const merkle = require("merkle");
 const cryptojs = require('crypto-js');
 const hexToBinary = require('hex-to-binary');
+const {TxIn, TxOut, Transaction, getTransactionId, signTxIn,processTransactions,validateTx,createCoinbaseTx,getPublicKey} = require('../trensection/transection')
 
 const BLOCK_GENERATION_INTERVAL = 2  // 초단위
 const DIFFICULTY_ADJUSTMENT_INTERVAL = 3 // 블록이 생성되는 간격(난이도 간격)
@@ -15,75 +16,77 @@ function getVersion() {
 }
 
 function createGenesisBlock() {
-  const version = getVersion()
-  const index = 0
-  const previousHash = '0'.repeat(64)
-  const timestamp = 1231006505  // 2009/01/03 6:15pm (UTC)
-  const body = ['The Times 03/Jan/2009 Chancellor on brink of second bailout for banks']
-  const tree = merkle('sha256').sync(body)
-  const merkleRoot = tree.root() || '0'.repeat(64)
-  const difficulty = 1
-  const nonce = 0
+    const version = getVersion();
+    const index = 0;
+    const previousHash = '0'.repeat(64);
+    const timestamp = 1231006505; // 2009/01/03 6:15pm (UTC)
+    const transection = [];
+    const body = ['The Times 03/Jan/2009 Chancellor on brink of second bailout for banks'];
+    const tree = merkle('sha256').sync(body);
+    const merkleRoot = tree.root() || '0'.repeat(64);
+    const difficulty = 1;
+    const nonce = 0;
 
-  const header = new BlockHeader(version, index, previousHash, timestamp, merkleRoot, difficulty, nonce)
+    const header = new BlockHeader(version, index, previousHash, timestamp, transection, merkleRoot, difficulty, nonce);
 
-  return new Block(header, body)
+    return new Block(header, body);
 }
 
 let Blocks = [createGenesisBlock()];
 
 function replaceChain(newBlocks) {
-  const { broadcast } = require('../network/networks');
-  const { responseLatestMsg } = require('../network/massage/massage');
+    const { broadcast } = require('../network/networks');
+    const { responseLatestMsg } = require('../network/massage/massage');
 
-  if (isValidChain(newBlocks)) {  
-    if ((newBlocks.length > Blocks.length) || (newBlocks.length === Blocks.length)) {
-      Blocks = newBlocks;
-      broadcast(responseLatestMsg());
+    if (isValidChain(newBlocks)) {
+        if (newBlocks.length > Blocks.length || newBlocks.length === Blocks.length) {
+            Blocks = newBlocks;
+            broadcast(responseLatestMsg());
+        }
+    } else {
+        console.log('받은 원장 오류');
     }
-  } else {
-    console.log("받은 원장 오류");
-  }
 }
 
 function isValidChain(newBlocks) {
-  const { isValidNewBlock } = require("../../utils/isValidBlock");
+    const { isValidNewBlock } = require('../../utils/isValidBlock');
 
-  if(JSON.stringify(newBlocks[0]) !== JSON.stringify(Blocks[0])) {
-    return false;
-  };
-
-  let tempBlocks = [newBlocks[0]];
-  for (let i = 1; i < newBlocks.length; i++) {   
-    if (isValidNewBlock(newBlocks[i], tempBlocks[i - 1])) {
-      tempBlocks.push(newBlocks[i]);
-    } else {
-      return false;
+    if (JSON.stringify(newBlocks[0]) !== JSON.stringify(Blocks[0])) {
+        return false;
     }
-  };
-  return true;
-};
+
+    let tempBlocks = [newBlocks[0]];
+    for (let i = 1; i < newBlocks.length; i++) {
+        if (isValidNewBlock(newBlocks[i], tempBlocks[i - 1])) {
+            tempBlocks.push(newBlocks[i]);
+        } else {
+            return false;
+        }
+    }
+    return true;
+}
 
 function getBlocks() {
-  return Blocks;
+    return Blocks;
 }
 
 function getLastBlock() {
-  return Blocks[Blocks.length - 1];
+    return Blocks[Blocks.length - 1];
 }
 
 function nextBlock(bodyData) {
-  const prevBlock = getLastBlock()
-  const version = getVersion()
-  const index = prevBlock.header.index + 1
-  const previousHash = createHash(prevBlock)
-  const timestamp = parseInt(Date.now() / 1000)
-  const tree = merkle('sha256').sync(bodyData)
-  const merkleRoot = tree.root() || '0'.repeat(64)
-  const difficulty = getDifficulty(getBlocks());
+    const prevBlock = getLastBlock();
+    const version = getVersion();
+    const index = prevBlock.header.index + 1;
+    const previousHash = createHash(prevBlock);
+    const timestamp = parseInt(Date.now() / 1000);
+    const transection = [];
+    const tree = merkle('sha256').sync(bodyData);
+    const merkleRoot = tree.root() || '0'.repeat(64);
+    const difficulty = getDifficulty(getBlocks());
 
-  const header = findBlock(version, index, previousHash, timestamp, merkleRoot, difficulty)
-  return new Block(header, bodyData)
+    const header = findBlock(version, index, previousHash, timestamp, transection, merkleRoot, difficulty);
+    return new Block(header, bodyData);
 }
 
 function hashMatchesDifficulty(hash, difficulty) {

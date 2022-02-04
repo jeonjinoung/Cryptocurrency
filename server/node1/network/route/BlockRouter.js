@@ -46,4 +46,16 @@ router.get("/version", (req, res) => {
   res.send(getVersion());
 });
 
+router.get('/mainTransaction', (req, res) => {
+    const address = req.body.address;
+    const amount = req.body.amount;
+    try {
+        const resp = generatenextBlockWithTransaction(address, amount);
+        res.send(resp);
+    } catch (e) {
+        console.log(e.message);
+        res.status(400).send(e.message);
+    }
+});
+
 module.exports = router;
