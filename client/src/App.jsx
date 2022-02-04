@@ -4,12 +4,11 @@ import { ThemeProvider } from "@mui/material/styles";
 import { StyledEngineProvider } from "@mui/material";
 
 import MainLayout from "./layout";
-import Dashboard from "./views/dashboard";
+import Dashboard from "./views/dashboard/Default";
 import PeerDefault from "./views/Peer";
 import BlockDefault from "./views/Block";
 import WalletDefault from "./views/Wallet";
 // import UserDefault from "./views/User/index";
-iiiimp;
 import themes from "./themes";
 import { Route, Routes } from "react-router-dom";
 
